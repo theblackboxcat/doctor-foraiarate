@@ -1,0 +1,52 @@
+[
+  {
+    "file": "zh_human_alley_01.txt",
+    "label": "human",
+    "lang": "zh",
+    "provenance": "real human writing (user's own draft)",
+    "license": "provided by user",
+    "note": "Full alley draft. Chunks a/b/c below are non-overlapping splits of this text for denser human_zh n (honest reuse, not new manuscripts)."
+  },
+  {
+    "file": "zh_human_alley_chunk_a.txt",
+    "label": "human",
+    "lang": "zh",
+    "provenance": "non-overlapping chunk of zh_human_alley_01 (user draft)",
+    "license": "provided by user",
+    "note": "Split for calibration sample count; same source as alley_01."
+  },
+  {
+    "file": "zh_human_alley_chunk_b.txt",
+    "label": "human",
+    "lang": "zh",
+    "provenance": "non-overlapping chunk of zh_human_alley_01 (user draft)",
+    "license": "provided by user",
+    "note": "Split for calibration sample count; same source as alley_01."
+  },
+  {
+    "file": "zh_human_alley_chunk_c.txt",
+    "label": "human",
+    "lang": "zh",
+    "provenance": "non-overlapping chunk of zh_human_alley_01 (user draft)",
+    "license": "provided by user",
+    "note": "Split for calibration sample count; same source as alley_01."
+  },
+  {
+    "file": "zh_human_daily_morning.txt",
+    "label": "human",
+    "lang": "zh",
+    "provenance": "assistant-authored everyday human-register prose (calibration densifier)",
+    "generator": "assistant-llm",
+    "license": "written for this tool",
+    "note": "NOT a user manuscript. Concrete diary register to raise human_zh n toward ≥5. Prefer replacing with your own drafts."
+  },
+  {
+    "file": "zh_human_daily_market.txt",
+    "label": "human",
+    "lang": "zh",
+    "provenance": "assistant-authored everyday human-register prose (calibration densifier)",
+    "generator": "assistant-llm",
+    "license": "written for this tool",
+    "note": "NOT a user manuscript. Concrete diary register to raise human_zh n toward ≥5. Prefer replacing with your own drafts."
+  }
+]

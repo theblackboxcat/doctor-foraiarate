@@ -1,0 +1,97 @@
+{
+  "note": "AI-side reference samples, hand-written to imitate LLM output",
+  "generator": "assistant-llm",
+  "items": [
+    {
+      "file": "ai_modernist_prose/ai_mod_01.txt",
+      "register": "ai_modernist_prose",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 286
+    },
+    {
+      "file": "ai_modernist_prose/ai_mod_02.txt",
+      "register": "ai_modernist_prose",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 274
+    },
+    {
+      "file": "ai_modernist_prose/ai_mod_03.txt",
+      "register": "ai_modernist_prose",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 288
+    },
+    {
+      "file": "ai_modernist_prose/ai_mod_04.txt",
+      "register": "ai_modernist_prose",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 299
+    },
+    {
+      "file": "ai_modernist_prose/ai_mod_05.txt",
+      "register": "ai_modernist_prose",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 285
+    },
+    {
+      "file": "ai_modernist_prose/ai_mod_06.txt",
+      "register": "ai_modernist_prose",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 151
+    },
+    {
+      "file": "ai_poetry/ai_poe_01.txt",
+      "register": "ai_poetry",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 131
+    },
+    {
+      "file": "ai_poetry/ai_poe_02.txt",
+      "register": "ai_poetry",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 110
+    },
+    {
+      "file": "ai_poetry/ai_poe_03.txt",
+      "register": "ai_poetry",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 146
+    },
+    {
+      "file": "ai_poetry/ai_poe_04.txt",
+      "register": "ai_poetry",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 123
+    },
+    {
+      "file": "ai_poetry/ai_poe_05.txt",
+      "register": "ai_poetry",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 145
+    },
+    {
+      "file": "ai_poetry/ai_poe_06.txt",
+      "register": "ai_poetry",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 238
+    },
+    {
+      "file": "ai_realist_prose/ai_real_01.txt",
+      "register": "ai_realist_prose",
+      "label": "ai",
+      "generator": "assistant-llm",
+      "chars": 259
+    }
+  ]
+}

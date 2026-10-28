@@ -1,0 +1,11 @@
+package        local_ai_detector_v3.2
+engine         local_heuristic_v3.2
+calibration    v3.2
+built_at       2026-10-26 17:51:50
+files          227
+bytes          799661
+
+bucket         n_human  n_ai   (see calibration.json for anchors)
+  en             24       12   
+  zh             110      23   
+  zh_poetry      8        6    

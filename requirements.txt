@@ -1,0 +1,12 @@
+# Core (v3.0). Everything runs locally; nothing calls a remote service.
+fastapi>=0.110
+uvicorn>=0.27
+pydantic>=2.5
+
+# Legacy GUI only — needed just for `python app.py`
+#   pip install gradio>=4.44.0,<6
+# Optional: .docx / .pdf import in the web UI
+#   pip install -r requirements-import.txt
+# Optional: ONNX third vote
+#   pip install -r requirements-onnx.txt
+#   python download_onnx_model.py

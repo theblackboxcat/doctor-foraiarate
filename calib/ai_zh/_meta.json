@@ -1,0 +1,146 @@
+[
+  {
+    "file": "zh_official_01.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 241,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_essay_02.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 222,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_lit_03.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 193,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_lit_04.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 183,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_marketing_05.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 213,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_tech_06.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 221,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_summary_07.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 203,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_review_08.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 191,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_qa_09.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 196,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_travel_10.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 203,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_env_11.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 211,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_culture_12.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 204,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_news_13.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 170,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_study_14.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 203,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "zh_lit_composite_01.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 287,
+    "provenance": "AI-taste literary composite from test_smoke ZH_LIT_AI (anonymized patterns)",
+    "generator": "assistant-llm",
+    "note": "Added in v3.1 so lit_zh_* slots get measured disc, not only prior_provisional."
+  },
+  {
+    "file": "zh_lit_composite_02.txt",
+    "label": "ai",
+    "lang": "zh",
+    "chars": 115,
+    "provenance": "AI-taste literary short sample (linger / 不是A是B / fake terse)",
+    "generator": "assistant-llm",
+    "note": "Added in v3.1 for lit_zh_* discriminability."
+  }
+]

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>本地 AI 写作信号检测器 v3.2</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="dot"></span>
+    <div>
+      <h1>本地 AI 写作信号检测器 <span class="ver">v3.2</span></h1>
+      <p class="sub">校准过的透明特征加权 · 离线 · 不调用任何远端服务</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button id="btnTheme" class="ghost" title="切换主题">◐ 主题</button>
+    <button id="btnProbe" class="ghost">探测后端</button>
+    <span id="probeBadge" class="badge">未探测</span>
+  </div>
+</header>
+
+<main class="layout">
+  <!-- ---------- left: input ---------- -->
+  <section class="panel input-panel">
+    <div class="panel-head">
+      <h2>输入</h2>
+      <div class="grow"></div>
+      <label class="file-btn">
+        导入文件
+        <input type="file" id="fileInput" accept=".txt,.md,.markdown,.docx,.pdf" hidden>
+      </label>
+    </div>
+    <div id="dropzone" class="dropzone">
+      <textarea id="textInput" spellcheck="false"
+        placeholder="把要检查的稿子粘在这里（英文 ≥80 字符，中文 ≥55 字）。&#10;也可以把 .txt / .md / .docx / .pdf 拖进来。"></textarea>
+      <div class="drop-hint">拖放文件到此处</div>
+    </div>
+    <div class="meta-row">
+      <span id="charCount">0 字</span>
+      <span id="langTag">—</span>
+      <span class="grow"></span>
+      <span id="calibTag" class="badge soft">校准：—</span>
+    </div>
+
+    <div class="examples">
+      <span class="lbl">示例：</span>
+      <button class="chip" data-ex="ai_en">AI 营销腔（英）</button>
+      <button class="chip" data-ex="human_en">经典演讲（英）</button>
+      <button class="chip" data-ex="human_zh">巷子散文（人）</button>
+      <button class="chip" data-ex="ai_zh">公文腔（AI）</button>
+      <button class="chip" data-ex="lit_zh">文学 AI 味</button>
+    </div>
+
+    <details class="opts">
+      <summary>选项</summary>
+      <div class="opt-grid">
+        <label>后端
+          <select id="backend">
+            <option value="heuristic" selected>heuristic（推荐）</option>
+            <option value="hybrid">hybrid（实验 · Ollama DNA）</option>
+          </select>
+        </label>
+        <label>高亮策略
+          <select id="highlightMode">
+            <option value="max_band" selected>只标最高档（TipType 约定）</option>
+            <option value="all">标全部档位</option>
+          </select>
+        </label>
+        <label class="chk"><input type="checkbox" id="useOnnx" checked> 混入 ONNX 第三票（有权重时）</label>
+        <label class="chk"><input type="checkbox" id="useWhitebox"> 白盒信号（需 Ollama，慢）</label>
+        <label>Ollama host <input id="ollamaHost" value="http://127.0.0.1:11434"></label>
+        <label>模型（空=自动选文本模型）<input id="ollamaModel" placeholder="qwen2:7b"></label>
+      </div>
+    </details>
+
+    <div class="btn-row">
+      <button id="btnAnalyze" class="primary">分析</button>
+      <button id="btnCompare" class="ghost">改稿前后对比</button>
+      <button id="btnExport" class="ghost">导出 JSON</button>
+      <span id="status" class="status"></span>
+    </div>
+
+    <div id="compareBox" class="compare hidden">
+      <div class="cmp-col">
+        <h3>改稿前</h3>
+        <textarea id="beforeText" rows="5" placeholder="粘贴改稿前的版本…"></textarea>
+      </div>
+      <div class="cmp-col">
+        <h3>改稿后</h3>
+        <textarea id="afterText" rows="5" placeholder="粘贴改稿后的版本…"></textarea>
+      </div>
+      <div class="cmp-actions">
+        <button id="btnRunCompare" class="primary">对比</button>
+        <div id="compareOut" class="cmp-out"></div>
+      </div>
+    </div>
+
+    <div class="history">
+      <div class="panel-head">
+        <h2>本机历史</h2><div class="grow"></div>
+        <button id="btnClearHistory" class="ghost small">清空</button>
+      </div>
+      <ul id="historyList" class="history-list"><li class="muted">暂无</li></ul>
+    </div>
+  </section>
+
+  <!-- ---------- right: results ---------- -->
+  <section class="panel result-panel">
+    <div class="score-card">
+      <div class="score-main">
+        <div class="score-num" id="scoreNum">—</div>
+        <div class="score-side">
+          <div class="band" id="bandZh">等待分析</div>
+          <div class="band-en" id="bandEn"></div>
+          <div class="p-line">AI概率 ≈ <code id="aiP">—</code> <span class="muted" title="校准后的 P(文本为 AI)；与置信度不是一回事">≠ 置信度</span></div>
+        </div>
+      </div>
+      <div class="conf">
+        <div class="conf-head">
+          <span>置信度 <span class="muted" style="font-weight:400">(分布集中度/证据量，≠AI概率)</span></span>
+          <span id="confVal">—</span>
+        </div>
+        <div class="conf-bar"><div id="confFill" class="conf-fill"></div></div>
+        <div id="confNote" class="conf-note"></div>
+      </div>
+      <div id="flags" class="flags"></div>
+    </div>
+
+    <div class="highlight-wrap">
+      <div class="legend">
+        <b>句级高亮</b>
+        <span class="sw red">红 ≥0.65</span>
+        <span class="sw yellow">黄 ≥0.40</span>
+        <span id="policyTag" class="badge soft">policy: —</span>
+        <span class="muted">（红/黄 = 该句相对本文更像模板；点句子看特征）</span>
+      </div>
+      <div id="highlight" class="highlight">粘贴文本后点「分析」。</div>
+      <div id="sentTip" class="sent-tip hidden"></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="features">特征</button>
+      <button class="tab" data-tab="sentences">句子</button>
+      <button class="tab" data-tab="paragraphs">段落</button>
+      <button class="tab" data-tab="weights">权重</button>
+      <button class="tab" data-tab="annotations">标注</button>
+      <button class="tab" data-tab="calib">校准</button>
+      <button class="tab" data-tab="json">JSON</button>
+    </div>
+
+    <div class="tab-body">
+      <div id="tab-features" class="tab-page active"></div>
+      <div id="tab-sentences" class="tab-page"></div>
+      <div id="tab-paragraphs" class="tab-page"></div>
+      <div id="tab-weights" class="tab-page"></div>
+      <div id="tab-annotations" class="tab-page"></div>
+      <div id="tab-calib" class="tab-page"></div>
+      <div id="tab-json" class="tab-page"><pre id="jsonOut">—</pre></div>
+    </div>
+
+    <footer class="foot">
+      <p><b>诚实边界</b>：本地启发式 + 校准，不是 TipType 专有模型/API，与 GPTZero / Turnitin / 朱雀等结果会不一致。
+      分数是<b>改稿线索</b>，不是作者身份证明。短文本、人机混写、同义改写、跨模型都会让它不准。</p>
+    </footer>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

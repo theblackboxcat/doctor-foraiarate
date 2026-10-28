@@ -1,0 +1,110 @@
+[
+  {
+    "file": "en_marketing_01.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 897,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_tech_explainer_02.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 858,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_essay_school_03.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 789,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_lifestyle_blog_04.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 794,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_academic_abstract_05.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 1032,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_best_practices_06.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 756,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_travel_07.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 751,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_climate_08.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 809,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_press_release_09.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 732,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_selfhelp_10.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 787,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_data_report_11.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 766,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  },
+  {
+    "file": "en_education_12.txt",
+    "label": "ai",
+    "lang": "en",
+    "chars": 731,
+    "provenance": "AI-generated calibration sample (LLM output)",
+    "generator": "assistant-llm",
+    "note": "written by the assistant that built this tool; real model output, not synthetic noise"
+  }
+]

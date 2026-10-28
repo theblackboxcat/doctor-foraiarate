@@ -1,0 +1,5 @@
+# Optional ONNX 3rd-vote (Windows laptop friendly). Not required for heuristic.
+onnxruntime>=1.17
+tokenizers>=0.19
+huggingface_hub>=0.20
+numpy>=1.24

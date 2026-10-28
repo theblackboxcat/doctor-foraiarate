@@ -1,0 +1,2176 @@
+{
+  "version": "3.2",
+  "built_at": "2026-10-26 17:11:13",
+  "langs": {
+    "en": {
+      "lang": "en",
+      "anchors": {
+        "adverb_density": {
+          "lo": 0.0,
+          "hi": 0.5417690417690417,
+          "scale": 0.5417690417690417,
+          "disc": 1.435,
+          "g": 0.8324,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "adverb_verb_proxy": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "unique_word_ratio_inv": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "sentence_start_variety_inv": {
+          "lo": 0.13392857142857145,
+          "hi": 0.0,
+          "scale": 0.13392857142857145,
+          "disc": -0.8957,
+          "g": -0.633,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": true
+        },
+        "burstiness_inv": {
+          "lo": 0.0,
+          "hi": 0.5598849937604794,
+          "scale": 0.5598849937604794,
+          "disc": 5.5399,
+          "g": 0.9998,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "list_template": {
+          "lo": 0.0,
+          "hi": 0.0625,
+          "scale": 0.1,
+          "disc": 0.4074,
+          "g": 0.327,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "comma_density": {
+          "lo": 0.35324675324675325,
+          "hi": 0.366,
+          "scale": 0.1,
+          "disc": -0.4356,
+          "g": -0.3478,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": true
+        },
+        "clause_layering_inv": {
+          "lo": 0.01388888888888884,
+          "hi": 0.45833333333333337,
+          "scale": 0.44444444444444453,
+          "disc": 0.2555,
+          "g": 0.2098,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "marketing_inflation": {
+          "lo": 0.0,
+          "hi": 0.6770833333333333,
+          "scale": 0.6770833333333333,
+          "disc": 1.2073,
+          "g": 0.7641,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "compression_ai_like": {
+          "lo": 0.22878775751187863,
+          "hi": 0.33992501080791276,
+          "scale": 0.11113725329603413,
+          "disc": 0.9417,
+          "g": 0.6554,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "window_burstiness_inv": {
+          "lo": 0.7337349020297654,
+          "hi": 0.9072346088113645,
+          "scale": 0.1734997067815991,
+          "disc": 1.1756,
+          "g": 0.7529,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_discourse_boilerplate": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_parallel_scaffold": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_policy_register": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_abstract_subject": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_fake_terse_rhythm": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_linger_gaze": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_broken_parallel": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_noun_reemphasize": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_bushi_shi": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_sceneless_simile": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_flat_dialogue": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_mech_scene": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_gloss_coda": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_universal_coda": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_abstract_binome": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_generic_simile": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_clean_antithesis": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_para_uniformity": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_punct_monotony": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "poe_prose_line": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "poe_explained_ending": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        },
+        "poe_abstract_line": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 24,
+          "n_ai": 12,
+          "source": "measured",
+          "flipped": false
+        }
+      },
+      "z_human": 0.2134,
+      "z_ai": 0.73,
+      "slope": 5.8714,
+      "center": 0.4717,
+      "n_human": 24,
+      "n_ai": 12,
+      "provisional": false,
+      "notes": [
+        "temperature T=0.425 (ECE 0.1683→0.0923, Brier 0.0585→0.0318); T>1 cools overconfidence"
+      ],
+      "temperature": 0.425,
+      "ece_before": 0.1683,
+      "ece_after": 0.0923,
+      "brier_before": 0.0585,
+      "brier_after": 0.0318
+    },
+    "zh": {
+      "lang": "zh",
+      "anchors": {
+        "adverb_density": {
+          "lo": 0.0,
+          "hi": 0.1607698001480385,
+          "scale": 0.1607698001480385,
+          "disc": 0.6907,
+          "g": 0.5195,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "adverb_verb_proxy": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.6994,
+          "g": 0.5247,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "unique_word_ratio_inv": {
+          "lo": 0.35454334411289945,
+          "hi": 0.0,
+          "scale": 0.35454334411289945,
+          "disc": -2.1514,
+          "g": -0.9461,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": true
+        },
+        "sentence_start_variety_inv": {
+          "lo": 0.1428571428571429,
+          "hi": 0.14379084967320266,
+          "scale": 0.1,
+          "disc": -0.4473,
+          "g": -0.3564,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": true
+        },
+        "burstiness_inv": {
+          "lo": 0.0,
+          "hi": 0.5268329014948089,
+          "scale": 0.5268329014948089,
+          "disc": 1.3869,
+          "g": 0.8196,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "list_template": {
+          "lo": 0.0,
+          "hi": 0.125,
+          "scale": 0.125,
+          "disc": 0.7247,
+          "g": 0.5398,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "comma_density": {
+          "lo": 0.31250981576562975,
+          "hi": 0.32901870425589586,
+          "scale": 0.1,
+          "disc": -0.0297,
+          "g": -0.0248,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": true
+        },
+        "clause_layering_inv": {
+          "lo": 0.29999999999999993,
+          "hi": 0.44999999999999996,
+          "scale": 0.15000000000000002,
+          "disc": 1.1433,
+          "g": 0.741,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "marketing_inflation": {
+          "lo": 0.0,
+          "hi": 0.125,
+          "scale": 0.125,
+          "disc": 2.4457,
+          "g": 0.9666,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "compression_ai_like": {
+          "lo": 0.19717931391772853,
+          "hi": 0.21553744561617666,
+          "scale": 0.1,
+          "disc": -0.1072,
+          "g": -0.0891,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": true
+        },
+        "window_burstiness_inv": {
+          "lo": 0.31585581616185276,
+          "hi": 0.75248491762792,
+          "scale": 0.43662910146606726,
+          "disc": 0.8582,
+          "g": 0.6139,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_discourse_boilerplate": {
+          "lo": 0.0,
+          "hi": 0.36363636363636365,
+          "scale": 0.36363636363636365,
+          "disc": 1.197,
+          "g": 0.7606,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_parallel_scaffold": {
+          "lo": 0.0,
+          "hi": 0.5,
+          "scale": 0.5,
+          "disc": 0.8798,
+          "g": 0.625,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_policy_register": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 1.57,
+          "g": 0.8639,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_abstract_subject": {
+          "lo": 0.08368431330229498,
+          "hi": 0.3750994968836825,
+          "scale": 0.2914151835813875,
+          "disc": 0.5124,
+          "g": 0.4028,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_fake_terse_rhythm": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.4077,
+          "g": 0.3272,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_linger_gaze": {
+          "lo": 0.0,
+          "hi": 0.21978021978021978,
+          "scale": 0.21978021978021978,
+          "disc": 1.536,
+          "g": 0.8565,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_broken_parallel": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0415,
+          "g": 0.0346,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_noun_reemphasize": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": -1.252,
+          "g": -0.7792,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": true
+        },
+        "lit_zh_bushi_shi": {
+          "lo": 0.0,
+          "hi": 0.338235294117647,
+          "scale": 0.338235294117647,
+          "disc": 1.196,
+          "g": 0.7602,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_sceneless_simile": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 1.2729,
+          "g": 0.786,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_flat_dialogue": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.1377,
+          "g": 0.1143,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_mech_scene": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": -0.1318,
+          "g": -0.1094,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": true
+        },
+        "mod_gloss_coda": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 1.0666,
+          "g": 0.7108,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_universal_coda": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.9062,
+          "g": 0.6382,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_abstract_binome": {
+          "lo": 0.0,
+          "hi": 0.41392933695058964,
+          "scale": 0.41392933695058964,
+          "disc": 1.0101,
+          "g": 0.6868,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_generic_simile": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.7411,
+          "g": 0.5494,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_clean_antithesis": {
+          "lo": 0.0,
+          "hi": 0.06535947712418301,
+          "scale": 0.1,
+          "disc": 1.091,
+          "g": 0.7207,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_para_uniformity": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.9792,
+          "g": 0.6729,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_punct_monotony": {
+          "lo": 0.0,
+          "hi": 0.6666666666666666,
+          "scale": 0.6666666666666666,
+          "disc": 1.0561,
+          "g": 0.7065,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "poe_prose_line": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "poe_explained_ending": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        },
+        "poe_abstract_line": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 110,
+          "n_ai": 23,
+          "source": "measured",
+          "flipped": false
+        }
+      },
+      "z_human": 0.0202,
+      "z_ai": 0.5938,
+      "slope": 5.2872,
+      "center": 0.307,
+      "n_human": 110,
+      "n_ai": 23,
+      "provisional": false,
+      "notes": [
+        "temperature T=0.425 (ECE 0.1804→0.0489, Brier 0.0572→0.0236); T>1 cools overconfidence"
+      ],
+      "temperature": 0.425,
+      "ece_before": 0.1804,
+      "ece_after": 0.0489,
+      "brier_before": 0.0572,
+      "brier_after": 0.0236
+    },
+    "zh_poetry": {
+      "lang": "zh_poetry",
+      "anchors": {
+        "adverb_density": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "adverb_verb_proxy": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "unique_word_ratio_inv": {
+          "lo": 0.0,
+          "hi": 0.02310924369747915,
+          "scale": 0.1,
+          "disc": -0.7748,
+          "g": -0.2844,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": true
+        },
+        "list_template": {
+          "lo": 0.0,
+          "hi": 0.1875,
+          "scale": 0.1875,
+          "disc": 0.8889,
+          "g": 0.6296,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "marketing_inflation": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "compression_ai_like": {
+          "lo": 0.14412205460459732,
+          "hi": 0.20370677776088886,
+          "scale": 0.1,
+          "disc": 0.3274,
+          "g": 0.2663,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_discourse_boilerplate": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_parallel_scaffold": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.4861,
+          "g": 0.3843,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_policy_register": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "zh_abstract_subject": {
+          "lo": 0.018744739057239054,
+          "hi": 0.09382978723404253,
+          "scale": 0.1,
+          "disc": -0.0842,
+          "g": -0.035,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": true
+        },
+        "lit_zh_linger_gaze": {
+          "lo": 0.0,
+          "hi": 0.46875,
+          "scale": 0.46875,
+          "disc": 0.8889,
+          "g": 0.6296,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_broken_parallel": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "lit_zh_bushi_shi": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": -0.7031,
+          "g": -0.2635,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": true
+        },
+        "lit_zh_sceneless_simile": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_gloss_coda": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.0,
+          "g": 0.0,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_universal_coda": {
+          "lo": 0.0,
+          "hi": 0.4814660175883231,
+          "scale": 0.4814660175883231,
+          "disc": 3.9242,
+          "g": 0.9971,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_abstract_binome": {
+          "lo": 0.0,
+          "hi": 0.4041339985744833,
+          "scale": 0.4041339985744833,
+          "disc": 1.1561,
+          "g": 0.7458,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_generic_simile": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": 0.947,
+          "g": 0.6579,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_clean_antithesis": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": -0.3472,
+          "g": -0.1408,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": true
+        },
+        "mod_para_uniformity": {
+          "lo": 0.0,
+          "hi": 0.35253289412904854,
+          "scale": 0.35253289412904854,
+          "disc": 3.2799,
+          "g": 0.9916,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "mod_punct_monotony": {
+          "lo": 0.16666666666666666,
+          "hi": 1.0,
+          "scale": 0.8333333333333334,
+          "disc": 4.4167,
+          "g": 0.9987,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        },
+        "poe_prose_line": {
+          "lo": 0.3118773946360153,
+          "hi": 0.044117647058823525,
+          "scale": 0.2677597475771918,
+          "disc": -0.6526,
+          "g": -0.2479,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": true
+        },
+        "poe_explained_ending": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "scale": 0.1,
+          "disc": -0.186,
+          "g": -0.0769,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": true
+        },
+        "poe_abstract_line": {
+          "lo": 0.0,
+          "hi": 0.10386029411764705,
+          "scale": 0.10386029411764705,
+          "disc": 0.4955,
+          "g": 0.391,
+          "n_human": 8,
+          "n_ai": 6,
+          "source": "measured",
+          "flipped": false
+        }
+      },
+      "z_human": -0.0132,
+      "z_ai": 0.5937,
+      "slope": 4.9968,
+      "center": 0.2903,
+      "n_human": 8,
+      "n_ai": 6,
+      "provisional": false,
+      "notes": [
+        "register bucket: 9 features undefined here and left without anchors (burstiness_inv, comma_density, clause_layering_inv, sentence_start_variety_inv, window_burstiness_inv, lit_zh_fake_terse_rhythm, lit_zh_flat_dialogue, lit_zh_mech_scene, lit_zh_noun_reemphasize)",
+        "temperature T=0.425 clamped to 0.8: n=14 < 30, separable small sample drives T→0 (confidence would be fake)",
+        "temperature T=0.8 (ECE 0.1981→0.1527, Brier 0.0445→0.0287); T>1 cools overconfidence"
+      ],
+      "temperature": 0.8,
+      "ece_before": 0.1981,
+      "ece_after": 0.1527,
+      "brier_before": 0.0445,
+      "brier_after": 0.0287
+    }
+  },
+  "corpus": {
+    "en": {
+      "human_samples": [
+        {
+          "file": "human_en/pride_00.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/pride_01.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/pride_02.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/pride_03.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/pride_04.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/pride_05.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/sherlock_00.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/sherlock_01.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/sherlock_02.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/sherlock_03.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/sherlock_04.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/sherlock_05.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/twocities_00.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/twocities_01.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/twocities_02.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/twocities_03.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/twocities_04.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/twocities_05.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/walden_00.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/walden_01.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/walden_02.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/walden_03.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/walden_04.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        },
+        {
+          "file": "human_en/walden_05.txt",
+          "label": "human",
+          "provenance": "real human writing (digitised book)",
+          "generator": ""
+        }
+      ],
+      "ai_samples": [
+        {
+          "file": "ai_en/en_academic_abstract_05.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_best_practices_06.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_climate_08.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_data_report_11.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_education_12.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_essay_school_03.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_lifestyle_blog_04.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_marketing_01.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_press_release_09.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_selfhelp_10.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_tech_explainer_02.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_en/en_travel_07.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        }
+      ]
+    },
+    "zh": {
+      "human_samples": [
+        {
+          "file": "human_zh/zh_human_alley_01.txt",
+          "label": "human",
+          "provenance": "real human writing (user's own draft)",
+          "generator": ""
+        },
+        {
+          "file": "human_zh/zh_human_alley_chunk_a.txt",
+          "label": "human",
+          "provenance": "non-overlapping chunk of zh_human_alley_01 (user draft)",
+          "generator": ""
+        },
+        {
+          "file": "human_zh/zh_human_alley_chunk_b.txt",
+          "label": "human",
+          "provenance": "non-overlapping chunk of zh_human_alley_01 (user draft)",
+          "generator": ""
+        },
+        {
+          "file": "human_zh/zh_human_alley_chunk_c.txt",
+          "label": "human",
+          "provenance": "non-overlapping chunk of zh_human_alley_01 (user draft)",
+          "generator": ""
+        },
+        {
+          "file": "human_zh/zh_human_daily_market.txt",
+          "label": "human",
+          "provenance": "assistant-authored everyday human-register prose (calibration densifier)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "human_zh/zh_human_daily_morning.txt",
+          "label": "human",
+          "provenance": "assistant-authored everyday human-register prose (calibration densifier)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "modernist_prose/luxun_congmingren_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_congmingren_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_diyu_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_diyu_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_fengzheng_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_fengzheng_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_fuchou2_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_fuchou_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_gou_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_guoke_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_guoke_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_guoke_02.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_guoke_03.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_guoke_04.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_haodegushi_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_haodegushi_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_laye_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_lilun_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_mujiewen_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_qiuqizhe_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_qiuye_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_qiuye_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_sihou_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_sihou_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_sihou_02.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_sihuo_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_sihuo_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_tuibai_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_tuibai_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_wodeshilian_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_xiwang_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_xiwang_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_xuehen_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_yijue_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_yijue_01.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_yinggaobie_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "modernist_prose/luxun_zhanshi_00.txt",
+          "label": "human",
+          "provenance": "modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_guxiang_00.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_guxiang_01.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_guxiang_02.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_guxiang_03.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_guxiang_04.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_guxiang_05.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_guxiang_06.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_guxiang_07.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_guxiang_08.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_kongyiji_00.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_kongyiji_01.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_kongyiji_02.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_kongyiji_03.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_shexi_00.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_shexi_01.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_shexi_02.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_shexi_03.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_shexi_04.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_shexi_05.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_shexi_06.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_shexi_07.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/luxun_shexi_08.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_00.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_01.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_02.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_03.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_04.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_05.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_06.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_07.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_08.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_09.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_10.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_11.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_12.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_13.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_14.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_15.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_16.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_17.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_18.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_19.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_20.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_21.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_22.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_23.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_24.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_1_25.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_00.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_01.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_02.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_03.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_04.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_05.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_06.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_07.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_08.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_09.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_10.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_11.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_12.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_13.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_14.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_15.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_16.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_17.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        },
+        {
+          "file": "realist_prose/xiaohong_hulanhe_2_18.txt",
+          "label": "human",
+          "provenance": "realist_prose",
+          "generator": ""
+        }
+      ],
+      "ai_samples": [
+        {
+          "file": "ai_zh/zh_culture_12.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_env_11.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_essay_02.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_lit_03.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_lit_04.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_lit_composite_01.txt",
+          "label": "ai",
+          "provenance": "AI-taste literary composite from test_smoke ZH_LIT_AI (anonymized patterns)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_lit_composite_02.txt",
+          "label": "ai",
+          "provenance": "AI-taste literary short sample (linger / 不是A是B / fake terse)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_marketing_05.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_news_13.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_official_01.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_qa_09.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_review_08.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_study_14.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_summary_07.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_tech_06.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_zh/zh_travel_10.txt",
+          "label": "ai",
+          "provenance": "AI-generated calibration sample (LLM output)",
+          "generator": "assistant-llm"
+        },
+        {
+          "file": "ai_modernist_prose/ai_mod_01.txt",
+          "label": "ai",
+          "provenance": "ai_modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "ai_modernist_prose/ai_mod_02.txt",
+          "label": "ai",
+          "provenance": "ai_modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "ai_modernist_prose/ai_mod_03.txt",
+          "label": "ai",
+          "provenance": "ai_modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "ai_modernist_prose/ai_mod_04.txt",
+          "label": "ai",
+          "provenance": "ai_modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "ai_modernist_prose/ai_mod_05.txt",
+          "label": "ai",
+          "provenance": "ai_modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "ai_modernist_prose/ai_mod_06.txt",
+          "label": "ai",
+          "provenance": "ai_modernist_prose",
+          "generator": ""
+        },
+        {
+          "file": "ai_realist_prose/ai_real_01.txt",
+          "label": "ai",
+          "provenance": "ai_realist_prose",
+          "generator": ""
+        }
+      ]
+    },
+    "zh_poetry": {
+      "human_samples": [
+        {
+          "file": "poetry/dai_canshou_00.txt",
+          "label": "human",
+          "provenance": "poetry",
+          "generator": ""
+        },
+        {
+          "file": "poetry/dai_fanyou_00.txt",
+          "label": "human",
+          "provenance": "poetry",
+          "generator": ""
+        },
+        {
+          "file": "poetry/dai_yuxiang_00.txt",
+          "label": "human",
+          "provenance": "poetry",
+          "generator": ""
+        },
+        {
+          "file": "poetry/wen_sishui_00.txt",
+          "label": "human",
+          "provenance": "poetry",
+          "generator": ""
+        },
+        {
+          "file": "poetry/wen_yexu_00.txt",
+          "label": "human",
+          "provenance": "poetry",
+          "generator": ""
+        },
+        {
+          "file": "poetry/wen_yijuhua_00.txt",
+          "label": "human",
+          "provenance": "poetry",
+          "generator": ""
+        },
+        {
+          "file": "poetry/xu_ouran_00.txt",
+          "label": "human",
+          "provenance": "poetry",
+          "generator": ""
+        },
+        {
+          "file": "poetry/xu_zaibie_00.txt",
+          "label": "human",
+          "provenance": "poetry",
+          "generator": ""
+        }
+      ],
+      "ai_samples": [
+        {
+          "file": "ai_poetry/ai_poe_01.txt",
+          "label": "ai",
+          "provenance": "ai_poetry",
+          "generator": ""
+        },
+        {
+          "file": "ai_poetry/ai_poe_02.txt",
+          "label": "ai",
+          "provenance": "ai_poetry",
+          "generator": ""
+        },
+        {
+          "file": "ai_poetry/ai_poe_03.txt",
+          "label": "ai",
+          "provenance": "ai_poetry",
+          "generator": ""
+        },
+        {
+          "file": "ai_poetry/ai_poe_04.txt",
+          "label": "ai",
+          "provenance": "ai_poetry",
+          "generator": ""
+        },
+        {
+          "file": "ai_poetry/ai_poe_05.txt",
+          "label": "ai",
+          "provenance": "ai_poetry",
+          "generator": ""
+        },
+        {
+          "file": "ai_poetry/ai_poe_06.txt",
+          "label": "ai",
+          "provenance": "ai_poetry",
+          "generator": ""
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Ettin 68M",
+  "description": "Ettin encoder (Johns Hopkins, 68M parameters, 77 MB) fine-tuned to detect AI-written English text. Held-out AUROC (1 = perfect, 0.5 = chance): 0.980 on rewritten AI texts, 0.946 on GPT-4 texts from unseen domains, 0.898 on the newest models (TextSight 2026), 0.822 on paraphrased GPT-4 texts, 0.752 on edited chatbot answers (Beemo). Calibrated: 50% flags 5% of human texts (MAGE).",
+  "task": "text",
+  "version": "d720129864ed",
+  "model": "model.onnx",
+  "labels": [
+    "human",
+    "AI-generated"
+  ],
+  "output": "logits",
+  "preprocess": [
+    {
+      "op": "tokenize",
+      "max_length": 512
+    }
+  ],
+  "license": "MIT (jhu-clsp/ettin-encoder-68m)",
+  "calibration": {
+    "target_fpr": 0.05,
+    "offset": 0.4767787903547287,
+    "n_human_texts": 2000,
+    "source": "mage_test"
+  }
+}

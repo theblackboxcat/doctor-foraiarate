@@ -1,0 +1,30 @@
+# Local virtualenv
+.venv/
+venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# ONNX weights are downloaded via download_onnx_model.py / download_onnx.bat.
+# Tokenizers, configs, README.txt, and .gitkeep under models/onnx stay tracked.
+models/onnx/**/model.onnx
+
+# Local export output; keep the placeholder.
+exports/*
+!exports/.gitkeep
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+credentials.json
+secrets/
