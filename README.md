@@ -2,7 +2,7 @@
 
 v3.2，引擎 `local_heuristic_v3.2`。离线的中文/英文 AI 写作信号检测工具：给的是改稿线索，不是作者证明。不调用远端 API，不上传文字，不需要账号。
 
-完整说明见 [README_ZH.md](README_ZH.md)。装法、自检和边界见 [发行说明.md](发行说明.md)。
+完整说明见 [README_ZH.md](README_ZH.md)（含 §9 竞品特征对照、§10 诚实边界；边界语气对齐 [Jisc 2026-10-15 AI detection update](https://nationalcentreforai.jiscinvolve.org/wp/2026/10/15/ai-detection-and-assessment-an-update-for-2026/)）。装法、自检和边界见 [发行说明.md](发行说明.md)。
 
 ## 安装与运行（Windows / Python 3.10+）
 

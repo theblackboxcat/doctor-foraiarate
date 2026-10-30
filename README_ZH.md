@@ -1,6 +1,6 @@
 # 本地 AI 写作信号检测器 v3.2（猫猫桌面版）
 
-对标公开的 AIGC 检测思路（GLTR / LRR / DetectGPT / Fast-DetectGPT / Binoculars / DNA-GPT / GPTZero 的 UX 约定）与开源实现，
+对标公开的 AIGC 检测思路（[GLTR](https://arxiv.org/abs/1906.04043) / LRR / DetectGPT / Fast-DetectGPT / Binoculars / DNA-GPT / GPTZero 的 UX 约定；中文对照语料常见于 [HC3-Chinese](https://github.com/Hello-SimpleAI/chatgpt-comparison-detection)）与开源实现，
 做成**可离线、可解释、可自己重校准**的本机工具。
 
 **不是 TipType 专有模型，不调用任何远端 API。** 分数是改稿线索，**不能证明作者是谁**。
@@ -448,9 +448,34 @@ python test_smoke.py  →  SMOKE OK
 
 ---
 
-## 9. 诚实边界
+## 9. 竞品特征对照（与 [humanize-chinese](https://github.com/swaylq/humanize-chinese)）
 
-### 9.1 这一层不解决的问题（重要）
+对照只列**双方文档或公开代码能直接核对**的维度。下表**不报**准确率 / AUC /「谁更强」——那些数字依赖各自校准集与测法，不能跨仓库横比。
+
+| 维度 | humanize-chinese（其 README 自述） | 本仓库 `local_heuristic_v3.2` |
+|---|---|---|
+| 产品重心 | 检测 + **离线改写 / 降 AIGC**（六段式流水线） | **只做检测与改稿线索**；不内置 humanizer |
+| 运行形态 | 纯标准库 CLI，零依赖；可选 CiLin | 本机 FastAPI + 启发式；可选 ONNX / Ollama |
+| 句长变异 | 句长 **CV** + 短句占比；在 **HC3-Chinese** 对照上报告 Cohen's d | `burstiness_inv` / `window_burstiness_inv` 等；锚点来自本仓库 `calibration.json`（`en` / `zh` / `zh_poetry`） |
+| 字符 trigram | 有：字符级 3-gram 困惑度（`ngram_freq_cn*.json`） | **主路径无** trigram / 困惑度表 |
+| GLTR 风格 rank 分桶 | 有：按 n-gram 频率做 top-k 分桶（对标 [GLTR](https://arxiv.org/abs/1906.04043)） | **主路径无**；可选 Ollama 白盒 logprobs 为实验项，默认关 |
+| 校准叙事 | 阈值在 **[HC3-Chinese](https://github.com/Hello-SimpleAI/chatgpt-comparison-detection)**（短问答）上校准；另有 academic / novel 等 scene | **不用 HC3 作锚点**；人类侧以公有领域文学/散文 + 自备 `calib/human_*`；AI 侧为助手生成样本（已标注） |
+| 语域 / 场景 | `--scene general \| academic \| novel`（及 auto） | `register_zh.poetry_probability` → `zh` / `zh_poetry`；诗歌桶屏蔽句长类未定义特征 |
+| 中文「工艺 / 套板」特征 | 规则层（模板句、高频词等）+ 统计层 + LR ensemble | 显式槽：`lit_zh_*`、`mod_*`、`poe_*`，经 `disc`/`g` 决定方向与是否入标注 |
+| 输出形态 | 0–100 分；可接改写 | Human Score + `confidence` + `annotations[]`（flag / review / ignore） |
+| 可复现自检 | 其仓库内 HC3 回归脚本 | `python test_smoke.py`、`python eval_registers.py` |
+
+**怎么读这张表**
+
+- humanize-chinese 把「测到」和「改掉」绑在同一工具链；本仓库刻意停在「指出可疑处」，避免把改写本身当成洗稿方案。
+- 双方都提到句长起伏，但**实现与校准集不同**：一边是 HC3 问答上的 CV；一边是本机分位锚点 + 诗歌定义域屏蔽。不能拿一边的 d 值去解释另一边的分数。
+- GLTR / HC3 是公开参照，不是本引擎的运行时依赖。本仓库对标其**问题设定**（哪类表面统计会骗人），不是复刻其公式。
+
+---
+
+## 10. 诚实边界
+
+### 10.1 这一层不解决的问题（重要）
 
 `register_zh.py` 的 docstring 里写得很直白，这里原样重复：
 
@@ -466,7 +491,7 @@ python test_smoke.py  →  SMOKE OK
 唯一的修法是把你自己的稿子放进 `calib/human_zh/`，重跑 `calibrate.py`。
 这也是为什么校准面板一直留着上传样本的入口。
 
-### 9.2 两个已知的具体漏检
+### 10.2 两个已知的具体漏检
 
 `eval_registers.py --detail` 里有两条 AI 样本没被抓住，**没有去调参追它们**：
 
@@ -487,19 +512,24 @@ python test_smoke.py  →  SMOKE OK
 好在散文桶也给了 0.648（勉强过 review 线）。要修就得给"书信体"加一路由，
 但那会把真正的书信散文也拖进诗歌桶——代价大于收益，所以留作已知边界。
 
-### 9.3 其他
+### 10.3 使用边界（与行业共识对齐）
 
+语气对齐 [Jisc / National Centre for AI：AI detection and assessment — an update for 2026（2026-10-15）](https://nationalcentreforai.jiscinvolve.org/wp/2026/10/15/ai-detection-and-assessment-an-update-for-2026/)：检测在进步，但问题本身更复杂；**更好的「检出 AI 参与」≠ 更好的「不当使用证据」**。
+
+- **人机混写（mixed authorship）很难。** 学生/作者与模型共同改同一篇，已越来越常见。本工具的段落窗口与标注清单最多给出「哪一段相对突出」，**不能**把混写拆成可上法庭的作者比例，也**不能**区分「整段生成」与「人类起草后润色」。
+- **过程证据 ≠ 成稿判决。** 键击回放、文档历史、过程监控（若你另用别的工具）说明的是写作过程；本仓库只看**成品文本的表面统计**。两套信号不可互换，更不能单凭其中一套定责。
+- **改稿线索 ≠ 作者身份证明。** Human Score / `annotations[]` 回答的是「哪里像套板、值不值得自己再改」；**不回答**「谁写的」。禁止把本机分数当作指控、成绩处罚或解雇依据。
 - **AI 侧参考样本由本助手生成**（`calib/ai_*/_meta.json` 里标 `generator: assistant-llm`）。检测**同源**文本时会偏极端。换一个模型的输出，分数可能没那么极端——这是校准集偏差，不是"真实世界准确率"。
 - **`eval_set/` 的 AI 侧只有 13 条，是手写的**（`make_ai_registers.py`）。它们写在新特征设计**之前**，所以特征集不是照着这些字符串拟合的——但 13 条也不足以支撑"AI 文学写作"这个类别的统计结论。上面所有 AUC 都是**小样本 AUC**。
 - **`zh_poetry` 桶的 ECE 是 0.1527**，比 `zh` 的 0.0489 差很多。14 条样本能拟合出的东西就这么多。诗歌的分数请当"提示"看，别当"概率"看。
 - **白盒模块未经真机验证**。`backends/ollama_whitebox.py` 按 Ollama 文档实现（echo + logprobs），本沙箱没有 Ollama，没跑通过。默认关闭，开了也要先在你的机器上核对 `echo_coverage`。
 - `sentence_start_variety_inv` / `comma_density` 在英文校准集上是 **FLIP**（数据说它们偏人类）。小样本下可能是语料现象，UI 标了 FLIP，别当规律用。
-- 与 GPTZero / Turnitin / 朱雀 / Originality 会不一致——正常。人机混写、同义改写、自动 humanizer 都会让它失效（文献里自动改写能让检出率从 74% 跌到 26%）。
+- 与 GPTZero / Turnitin / 朱雀 / Originality 会不一致——正常。人机混写、同义改写、自动 humanizer 都会让信号衰减或失效。
 - 适合**自己改稿**看"哪句像模板"，不适合给人贴标签。
 
 ---
 
-## 10. 文件一览
+## 11. 文件一览
 
 ```
 local_ai_detector/
@@ -542,7 +572,7 @@ local_ai_detector/
 
 ---
 
-## 11. 版本摘要
+## 12. 版本摘要
 
 - **v2**：压缩特征 + Ollama hybrid 骨架
 - **v2.1**：DNA 不确定区间门控、避开 VL、记忆型降权
@@ -555,7 +585,7 @@ local_ai_detector/
 
 ---
 
-## 12. 发行包
+## 13. 发行包
 
 ```bat
 cd local_ai_detector_win
@@ -571,7 +601,7 @@ python make_release.py --no-zip   REM 只铺开目录，便于先看一眼
 
 `make_release.py` 里 `TOP_FILES` 是**白名单**（新增文件默认不进包，逼你做一次判断），
 每个排除项都写了理由。包内附 `VERSION.txt`（含三个桶的样本数）和 `SHA256SUMS.txt`。
-随包还带 `发行说明.md`——装法、自检命令、期望数字、三条诚实边界。
+随包还带 `发行说明.md`——装法、自检命令、期望数字、诚实边界（含人机混写 / 过程≠成稿 / 线索≠作者证明）。
 
 包里**不含** ONNX 权重与 Ollama。它们只是"第三票"，缺了会软失败
 （`probe()` 返回 `available=False`），主路径不受影响。
