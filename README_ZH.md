@@ -448,7 +448,9 @@ python test_smoke.py  →  SMOKE OK
 
 ---
 
-## 9. 竞品特征对照（与 [humanize-chinese](https://github.com/swaylq/humanize-chinese)）
+## 9. 竞品特征对照
+
+### 9.0 与 [humanize-chinese](https://github.com/swaylq/humanize-chinese)
 
 对照只列**双方文档或公开代码能直接核对**的维度。下表**不报**准确率 / AUC /「谁更强」——那些数字依赖各自校准集与测法，不能跨仓库横比。
 
@@ -470,6 +472,29 @@ python test_smoke.py  →  SMOKE OK
 - humanize-chinese 把「测到」和「改掉」绑在同一工具链；本仓库刻意停在「指出可疑处」，避免把改写本身当成洗稿方案。
 - 双方都提到句长起伏，但**实现与校准集不同**：一边是 HC3 问答上的 CV；一边是本机分位锚点 + 诗歌定义域屏蔽。不能拿一边的 d 值去解释另一边的分数。
 - GLTR / HC3 是公开参照，不是本引擎的运行时依赖。本仓库对标其**问题设定**（哪类表面统计会骗人），不是复刻其公式。
+
+### 9.1 反向借鉴：共识判决 vs 分歧信号
+
+这一节借用 [aidetector.com](https://aidetector.com/) 的公开页（2026）来收紧本仓库已经写下的边界。对方口号只出现在引号里，不当本工具的 slogan。下面的百分比是**该站营销表或论文摘要里的话**。不跨站横比准确率，也不外推成中文文学检测的承诺。
+
+**多票是信息，四检不是判决。** 首页原话是 “One detector is a guess. Four is a verdict.” 同页营销表写着：单检假阳约 1.3–5.0%，两检须一致约 0.36%，三检 triad 0.0073%，四检 “~0%”；另一张卡片把两检写成约 0.56%。页内注明这些假阳率 “derived from Hyatt et al. (2025)”，并称四检是在三检方法上再加一路信号。英雄区另标 “99.1% Accuracy Rate”。这些都是该站的营销表述。Hyatt 等人讨论的是降低一类 STEM 短文的假阳，不能外推成本仓库中文文学语域的准确率。本仓库若同时给出启发式、ONNX、DNA，读法固定为：分歧和一致都是信息；票面一致也不能定责。
+
+论文场景以可打开的机构记录为准：[Using aggregated AI detector outcomes to eliminate false positives in STEM student writing](https://asu.elsevierpure.com/en/publications/using-aggregated-ai-detector-outcomes-to-eliminate-false-positive/)（Hyatt, Bienenstock, Firetto, Woods, Comus，*Advances in Physiology Education* 49(2):486–495，2025，DOI `10.1152/advan.00235.2024`）。摘要写的是本科解剖与生理课上的事实型短文（细胞膜如何选择透过；完成调查的参与者 n=190；检测子集为随机抽出的 n=50 名参与者的人写与 AI 写答卷，送四个检测器）。最佳检测器一侧的假阳约 1.3%，人类评分者约 5.0%；摘要称聚合后假阳 “nearly 0%” / “nearly zero”，用途是告知教师。那不是中文文学，也不是本仓库的校准集。期刊全文页在本次核对时直接请求返回 HTTP 403，正文不挂该链。检索到的结果节比营销表细：含 Copyleaks 的联合假阳写成 0%（图注写明这是观察数据上的计算，不是数学绝对零）；不含 Copyleaks 的 GPTZero–Detect GPT–Originality 三元组为 0.0073%；把 Detect GPT 并进四个检测器的平均后，假阳与假阴升到 5.5±4.2% 与 15.3±9.3%。首页的四检 “~0%” 对不上「四个检测器取平均」，也不是本工具的承诺。同站博客 [What are “False-Positives” in AI Writing Detection?](https://aidetector.com/blog/false-positives) 另写 348 篇（174 篇 AI + 174 篇人类）以及 Originality.ai 97.98%、DetectGPT 69.70%。那是博客自己的句子，和上面的摘要不是同一组样本，引用时分开。
+
+**分歧是信号；混合分仍然只是改稿线索。** 首页还有一句 “Disagreement is the signal.”，后半句是 “When all four detectors flag a piece as AI, you can trust it.” 本仓库只保留前半的含义：不一致时提高过程证据的权重。字段以 `detector.py` 为准：
+
+- `meta.voter_disagreement` 是已投票后端的极差，`max(votes) − min(votes)`。票始终含启发式后验；只有 `meta.onnx.used` 时才加入 ONNX 的 `ai_prob`；只有 `meta.ollama.used` 时才加入 DNA 的 `ai_like`（写在信号名 `ollama_dna_overlap` 上）。不足两票时该值为 0，表示没有第二票，不表示各检测器一致。
+- 这个极差乘进 `confidence`（见 §6），并可能把文档打成 `insufficient_evidence`（`confidence < 0.42` 或短于下限）。它本身不是作者标签。网页在 `meta.voter_disagreement > 0.3` 时提示「启发式 / ONNX / DNA 意见不一致」（`web/app.js`）。
+- 后端打开时，ONNX / DNA 仍可能被混合进 `ai_probability`。混合后的 Human Score 仍是改稿线索。分歧变大时去看过程证据，不要把混合结果当成作者标签。
+- 句级和文档级各看各的作用域。`sentences[].heat` 取 `red` / `yellow` / `none`；`annotations[]` 里 `kind` 为 `sentence` 或 `paragraph` 的条目作用域是片段，`kind` 为 `feature` 的条目与 Human Score 同属整篇（§5）。片段与总分不一致时，同样去看过程证据，而不是把两边平均成一个作者结论。每条标注仍带自己的 `p_ai`、`confidence`、`action`（`flag` / `review` / `ignore`）。
+
+**高风险场景先看过程，检测分只做改稿线索。** 上面那篇假阳博客在介绍多检的同时，把 Google Docs 版本历史、当场口头核对、要求引用到页码、按个人经验重设计作业写成办法。成绩、处分、雇佣这类场景里，这些过程证据优先；本仓库的分数只回答「成品表面哪里像公共风格签名、值不值得自己再改」。这与 §10.3「过程证据 ≠ 成稿判决」是同一条边界。博客 URL 留在这里，当作连检测商的公开说明也把过程证据写进建议的外部旁证。旁证不能给成稿分数授权。
+
+首页 FAQ「Can AI detection be fooled?」的原文是 “While no tool is infallible…”；同页准确率问答另写 “over 90%”。两句都只属于该站。本次核对没有在首页或常见路径上找到该站自营的 Text Humanizer（`/humanizer`、`/ai-humanizer`、`/text-humanizer` 均为 HTTP 404）；博客在评测别家的 humanizer。本仓库继续不内置 humanizer。
+
+| 维度 | aidetector.com（公开页，2026） | 本仓库 `local_heuristic_v3.2` |
+|---|---|---|
+| 产品重心 | 云端多检共识：内置检测免费，Originality.ai / Winston AI / GPTZero 按积分加开；另售抄袭、拼写、事实检查。句级色块、分句置信、PDF 报告。主叙事是聚合降假阳。不跟本仓库比准确率 | 离线启发式，槽级可解释。ONNX / DNA 可选，分歧进 `meta.voter_disagreement` 并下调 `confidence`。无内置 humanizer。多票只提供信息，拒绝作者判决 |
 
 ---
 
@@ -520,15 +545,17 @@ python test_smoke.py  →  SMOKE OK
 
 本仓库说的「AI 味」（套板、助手腔、特征槽点名的那层规律）不是作者指纹。按 [PASTA](https://aclanthology.org/2026.emnlp-main.708/)（Post-training Alignment Signature Targeted Ablation；Anand et al., EMNLP 2026，[arXiv:2605.30526](https://arxiv.org/abs/2605.30526)）的意思，它近似于**后训练留下的公共风格签名**（commodity / public-style signature）：对齐会把生成从人类语料风格推向一种更窄、跨模型可共享、检测器更容易看见的文体。PASTA 把这层规律当成可测量的后训练签名，而不是某一个人的笔迹。因此 **检测器分数 ≠ 作者证明**：高分只说明表面统计更靠近这层公共腔调，不能证明「这段是模型写的」；低分也不能证明「这段是人写的」。
 
+助手改写还会把不同作者的文风收拢。[Malik 与 Awan](https://arxiv.org/abs/2608.00926) 把改写后作者归属准确率的下降定义为 Idiolect Erasure Rate（IER），并把「既难归因到人、又可能躲过现行检测器」称为 double erasure。风格往检测器放行的样子收敛时，检测会把剩下的差异反向定义成「像人」。本仓库没有测量 IER。低分和被改写抹平的表面一样，都不能当作者证明。多检分歧与高风险场景见 §9.1。
+
 - **人机混写（mixed authorship）很难。** 学生/作者与模型共同改同一篇，已越来越常见。本工具的段落窗口与标注清单最多给出「哪一段相对突出」，**不能**把混写拆成可上法庭的作者比例，也**不能**区分「整段生成」与「人类起草后润色」。
-- **过程证据 ≠ 成稿判决。** 键击回放、文档历史、过程监控（若你另用别的工具）说明的是写作过程；本仓库只看**成品文本的表面统计**。两套信号不可互换，更不能单凭其中一套定责。
+- **过程证据 ≠ 成稿判决。** 键击回放、文档历史、过程监控（若你另用别的工具）说明的是写作过程；本仓库只看**成品文本的表面统计**。两套信号不可互换，更不能单凭其中一套定责。成绩、处分、雇佣场景里，版本历史、口头核对、作业设计优先于检测分；检测分只做改稿线索（§9.1）。
 - **改稿线索 ≠ 作者身份证明。** Human Score / `annotations[]` 回答的是「哪里像上述公共风格签名、值不值得自己再改」；**不回答**「谁写的」。禁止把本机分数当作指控、成绩处罚或解雇依据。
 - **AI 侧参考样本由本助手生成**（`calib/ai_*/_meta.json` 里标 `generator: assistant-llm`）。检测**同源**文本时会偏极端。换一个模型的输出，分数可能没那么极端——这是校准集偏差，不是"真实世界准确率"。
 - **`eval_set/` 的 AI 侧只有 13 条，是手写的**（`make_ai_registers.py`）。它们写在新特征设计**之前**，所以特征集不是照着这些字符串拟合的——但 13 条也不足以支撑"AI 文学写作"这个类别的统计结论。上面所有 AUC 都是**小样本 AUC**。
 - **`zh_poetry` 桶的 ECE 是 0.1527**，比 `zh` 的 0.0489 差很多。14 条样本能拟合出的东西就这么多。诗歌的分数请当"提示"看，别当"概率"看。
 - **白盒模块未经真机验证**。`backends/ollama_whitebox.py` 按 Ollama 文档实现（echo + logprobs），本沙箱没有 Ollama，没跑通过。默认关闭，开了也要先在你的机器上核对 `echo_coverage`。
 - `sentence_start_variety_inv` / `comma_density` 在英文校准集上是 **FLIP**（数据说它们偏人类）。小样本下可能是语料现象，UI 标了 FLIP，别当规律用。
-- 与 GPTZero / Turnitin / 朱雀 / Originality 会不一致——正常。人机混写、同义改写、自动 humanizer 都会让信号衰减或失效。
+- 与 GPTZero / Turnitin / 朱雀 / Originality 会不一致——正常。人机混写、同义改写、自动 humanizer 都会让信号衰减或失效。不一致时提高过程证据的权重（§9.1），不要把多票混合结果当成作者标签。
 - 适合**自己改稿**看"哪句像模板"，不适合给人贴标签。
 
 ---
@@ -605,7 +632,7 @@ python make_release.py --no-zip   REM 只铺开目录，便于先看一眼
 
 `make_release.py` 里 `TOP_FILES` 是**白名单**（新增文件默认不进包，逼你做一次判断），
 每个排除项都写了理由。包内附 `VERSION.txt`（含三个桶的样本数）和 `SHA256SUMS.txt`。
-随包还带 `发行说明.md`——装法、自检命令、期望数字、诚实边界（含人机混写 / 过程≠成稿 / 「AI 味」≈ 后训练公共风格签名 / 检测器分数 ≠ 作者证明）。
+随包还带 `发行说明.md`——装法、自检命令、期望数字、诚实边界（含人机混写 / 过程≠成稿 / 「AI 味」≈ 后训练公共风格签名 / 检测器分数 ≠ 作者证明 / 多票分歧不是作者判决）。
 
 包里**不含** ONNX 权重与 Ollama。它们只是"第三票"，缺了会软失败
 （`probe()` 返回 `available=False`），主路径不受影响。
