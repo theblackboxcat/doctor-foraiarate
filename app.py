@@ -16,8 +16,6 @@ import json
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-import gradio as gr
-
 from detector import (
     DEFAULT_WEIGHTS,
     MIN_CHARS,
@@ -120,6 +118,55 @@ def build_highlight_html(result) -> str:
     )
 
 
+# Same cutoff as web/app.js before it says the backends disagree.
+VOTER_DISAGREE_NOTE = 0.3
+
+
+def _second_backend_voted(meta: Dict) -> bool:
+    """True when ONNX or DNA actually cast a vote.
+
+    detector.py only includes those probabilities in voter_disagreement when
+    meta.onnx.used / meta.ollama.used is set. A stored 0 with neither flag
+    means there was no second vote, not that the backends agreed.
+    """
+    onnx = meta.get("onnx") or {}
+    ollama = meta.get("ollama") or {}
+    return bool(
+        (isinstance(onnx, dict) and onnx.get("used"))
+        or (isinstance(ollama, dict) and ollama.get("used"))
+    )
+
+
+def voter_disagreement_md(meta: Dict) -> str:
+    """Score-card line for the Gradio/legacy report.
+
+    Shown once at least two backends voted (ONNX or DNA used, or a positive
+    range — detector.py only stores a positive range when len(votes) >= 2).
+    The 「意见不一致」 sentence matches web/app.js and only appears above 0.3.
+    """
+    if not isinstance(meta, dict):
+        return ""
+    raw = meta.get("voter_disagreement")
+    voted = _second_backend_voted(meta)
+    if raw is None and not voted:
+        return ""
+    try:
+        disagree = float(0.0 if raw is None else raw)
+    except (TypeError, ValueError):
+        return ""
+    if disagree < 0 or (disagree == 0.0 and not voted):
+        return ""
+    line = f"\n\n投票分歧 {disagree:.2f}"
+    if disagree > VOTER_DISAGREE_NOTE:
+        line += (
+            "（启发式 / ONNX / DNA 意见不一致）。"
+            "分歧是信号：请提高过程证据的权重，混合分不是作者判决。"
+        )
+    else:
+        line += "。"
+    return line
+
+
 def build_score_md(result) -> str:
     warn = ""
     if result.too_short:
@@ -186,6 +233,7 @@ def build_score_md(result) -> str:
     conf_line = f"\n\n**置信度 {conf:.2f}**"
     if getattr(result, "insufficient_evidence", False):
         conf_line += " ⚠️ **证据不足**（文本过短或特征结论分散，分数仅作参考）"
+    conf_line += voter_disagreement_md(result.meta or {})
     if calib.get("provisional"):
         conf_line += (
             f"\n\n⚠️ 校准 `{calib.get('lang')}` 侧样本不足"
@@ -400,6 +448,8 @@ EXAMPLES = [
 
 
 def build_ui() -> gr.Blocks:
+    import gradio as gr
+
     defaults = load_slider_defaults()
     labels = [
         "adverb_density 副词密度",
