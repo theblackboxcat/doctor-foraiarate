@@ -34,6 +34,7 @@ from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
 
 from detector import (  # noqa: E402
+
     DEFAULT_WEIGHTS,
     MIN_CHARS,
     MIN_CHARS_ZH,
@@ -43,6 +44,7 @@ from detector import (  # noqa: E402
     reload_calibration,
     save_weights,
 )
+from honesty_signals import attach_honesty_fields  # aidetector reverse: split + process hint
 # 引擎标识只有一个真相来源：detector._ENGINE。
 # 这里原来是字面量 "local_heuristic_v3.1"，于是 v3.2 发版后 /api/meta 仍报 v3.1——
 # 而前端标题、Cowrite 侧的 ai_annotate.available() 各自还有一份自己的版本号。
@@ -350,6 +352,7 @@ def api_analyze(req: AnalyzeRequest):
         highlight_mode=req.highlight_mode or "max_band",
     )
     data = result.to_dict()
+    data = attach_honesty_fields(data)
 
     # Optional white-box signal (needs Ollama; off by default)
     wb: Dict[str, Any] = {"used": False}

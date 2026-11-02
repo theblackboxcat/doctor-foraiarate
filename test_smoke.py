@@ -556,6 +556,31 @@ def main() -> None:
         "surfacing disagreement does not rescore",
     )
 
+
+    # --- aidetector reverse: voter split / process-evidence hint ---
+    from honesty_signals import attach_honesty_fields, build_voter_split, observer_spread
+    # synthetic meta: heuristic low, onnx observer high, not blended
+    fake = {
+        "ai_probability": 0.05,
+        "meta": {
+            "voter_disagreement": 0.0,
+            "onnx": {
+                "used": False,
+                "status": "skipped_already_human_zh",
+                "ai_prob_before": 0.05,
+                "ai_prob_onnx": 0.94,
+                "score": {"ok": True, "ai_prob": 0.94},
+            },
+            "ollama": {"used": False, "status": "skipped"},
+        },
+    }
+    attach_honesty_fields(fake)
+    assert fake["voter_split"], "voter_split empty"
+    assert any(v.get("role") == "observer" for v in fake["voter_split"]), "observer onnx missing"
+    assert fake["process_evidence_hint"]["effective_spread"] >= 0.3, fake["process_evidence_hint"]
+    assert fake["process_evidence_hint"]["level"] == "disagreement", fake["process_evidence_hint"]
+    print("  honesty_signals observer-split OK", fake["process_evidence_hint"]["effective_spread"])
+
     print("SMOKE OK")
     print(f"  AI_SLOP   human_score={ai.human_score} clarity={ai.clarity_score} ai_p={ai.ai_probability:.3f}")
     print(f"  Gettysburg human_score={human.human_score} clarity={human.clarity_score}")
