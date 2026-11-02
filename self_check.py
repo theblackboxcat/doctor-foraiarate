@@ -34,6 +34,7 @@ def score(text: str) -> dict:
         "human_score": r.human_score,
         "p_ai": p_ai,
         "confidence": getattr(r, "confidence", None) or meta.get("confidence"),
+        "voter_disagreement": meta.get("voter_disagreement"),
         "engine": meta.get("engine"),
         "register": meta.get("register") or meta.get("zh_register") or meta.get("register_zh"),
         "flags": [a for a in anns if (a.get("action") or "") in ("flag", "review")],

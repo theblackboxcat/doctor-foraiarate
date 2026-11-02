@@ -496,6 +496,66 @@ def main() -> None:
         # highlight_mode onnx-off comparison stays fixed (already asserted above)
         assert_true(r_all.human_score == r_base_hl.human_score, "highlight_mode fixed vs onnx-off")
 
+    # voter_disagreement is already on meta (and lowers confidence in detector).
+    # Gradio/legacy report must show it the same way web/app.js does, without ONNX.
+    heur_only = analyze(AI_SLOP, backend="heuristic", use_onnx=False)
+    vd = heur_only.meta.get("voter_disagreement")
+    assert_true("voter_disagreement" in heur_only.meta, "voter_disagreement key on meta")
+    assert_true(isinstance(vd, (int, float)) and not isinstance(vd, bool),
+                f"voter_disagreement numeric, got {vd!r}")
+    assert_true(0.0 <= float(vd) <= 1.0, f"voter_disagreement in [0, 1], got {vd}")
+    assert_true(not (heur_only.meta.get("onnx") or {}).get("used"), "heuristic run did not use onnx")
+    assert_true(not (heur_only.meta.get("ollama") or {}).get("used"), "heuristic run did not use ollama")
+    assert_true(float(vd) == 0.0, f"single voter disagreement should be 0, got {vd}")
+    short_vd = analyze("Hello world.", backend="heuristic", use_onnx=False)
+    assert_true(
+        float(short_vd.meta.get("voter_disagreement")) == 0.0,
+        "short heuristic-only disagreement should be 0",
+    )
+    from app import build_score_md
+    from self_check import score as cli_score
+
+    quiet_md = build_score_md(heur_only)
+    assert_true("投票分歧" not in quiet_md, "single voter must not look like the backends agreed")
+    assert_true("意见不一致" not in quiet_md, "zero disagreement must not say 意见不一致")
+    cli = cli_score(AI_SLOP)
+    assert_true("voter_disagreement" in cli, "CLI score exposes voter_disagreement next to confidence")
+    assert_true(float(cli["voter_disagreement"]) == 0.0, "CLI heuristic-only disagreement is 0")
+
+    def _report_with(value, onnx_used=False):
+        sample = analyze(GETTYSBURG, backend="heuristic", use_onnx=False)
+        sample.meta["voter_disagreement"] = value
+        if onnx_used:
+            onnx_meta = sample.meta.setdefault("onnx", {})
+            if isinstance(onnx_meta, dict):
+                onnx_meta["used"] = True
+        return build_score_md(sample)
+
+    agreed = _report_with(0.0, onnx_used=True)
+    assert_true("投票分歧 0.00" in agreed, "second vote with range 0 is visible")
+    assert_true("意见不一致" not in agreed, "exact agreement is not 意见不一致")
+    mild = _report_with(0.2)
+    assert_true("投票分歧 0.20" in mild, "sub-threshold spread is still shown")
+    assert_true("意见不一致" not in mild, "0.3 threshold matches web/app.js")
+    edge = _report_with(0.3)
+    assert_true("投票分歧 0.30" in edge, "threshold value itself is shown")
+    assert_true("意见不一致" not in edge, "note uses > 0.3, same as web/app.js")
+    loud = _report_with(0.42)
+    assert_true("投票分歧 0.42" in loud, "report surfaces disagreement")
+    assert_true("启发式 / ONNX / DNA 意见不一致" in loud, "web copy when disagreement > 0.3")
+    assert_true("过程证据" in loud and "不是作者判决" in loud, "process-evidence nudge, not a verdict")
+    # Rendering the note must not touch the score the detector already computed.
+    untouched = analyze(GETTYSBURG, backend="heuristic", use_onnx=False)
+    rendered = analyze(GETTYSBURG, backend="heuristic", use_onnx=False)
+    rendered.meta["voter_disagreement"] = 0.42
+    assert_true(build_score_md(rendered) != build_score_md(untouched), "note changes the report text")
+    assert_true(
+        rendered.human_score == untouched.human_score
+        and rendered.ai_probability == untouched.ai_probability
+        and rendered.confidence == untouched.confidence,
+        "surfacing disagreement does not rescore",
+    )
+
     print("SMOKE OK")
     print(f"  AI_SLOP   human_score={ai.human_score} clarity={ai.clarity_score} ai_p={ai.ai_probability:.3f}")
     print(f"  Gettysburg human_score={human.human_score} clarity={human.clarity_score}")
