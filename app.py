@@ -24,6 +24,7 @@ from detector import (
     load_weights,
     save_weights,
 )
+from honesty_signals import build_process_evidence_hint, build_voter_split
 
 ROOT = Path(__file__).resolve().parent
 WEIGHTS_PATH = ROOT / "weights.json"
@@ -137,34 +138,56 @@ def _second_backend_voted(meta: Dict) -> bool:
     )
 
 
-def voter_disagreement_md(meta: Dict) -> str:
-    """Score-card line for the Gradio/legacy report.
+def _has_second_backend_vote(meta: Dict) -> bool:
+    """True when ONNX/DNA actually entered the counted disagreement set."""
+    onnx = meta.get("onnx") or {}
+    ollama = meta.get("ollama") or {}
+    return bool(
+        (isinstance(onnx, dict) and onnx.get("used"))
+        or (isinstance(ollama, dict) and ollama.get("used"))
+    )
 
-    Shown once at least two backends voted (ONNX or DNA used, or a positive
-    range — detector.py only stores a positive range when len(votes) >= 2).
-    The 「意见不一致」 sentence matches web/app.js and only appears above 0.3.
-    """
-    if not isinstance(meta, dict):
-        return ""
+
+def voter_disagreement_md(meta: Dict, ai_probability: float | None = None) -> str:
+    """Counted disagreement (PR#4) + reverse split (aidetector negative example)."""
+    meta = meta or {}
     raw = meta.get("voter_disagreement")
-    voted = _second_backend_voted(meta)
-    if raw is None and not voted:
-        return ""
     try:
-        disagree = float(0.0 if raw is None else raw)
+        disagree = float(raw) if raw is not None else 0.0
     except (TypeError, ValueError):
+        disagree = 0.0
+
+    parts: List[str] = []
+    # Keep Gradio visibility contract: show 投票分歧 when a second backend counted
+    # or stored range > 0. Heuristic-only 0 is NOT printed as agreement.
+    if _has_second_backend_vote(meta) or disagree > 0:
+        line = f"投票分歧 {disagree:.2f}"
+        if disagree > 0.3:
+            line += "（启发式 / ONNX / DNA 意见不一致）"
+            line += "\n\n分歧是信号：请提高过程证据的权重，混合分不是作者判决。"
+        parts.append(line)
+
+    split = build_voter_split(meta, ai_probability)
+    hint = build_process_evidence_hint(meta, split)
+    if split:
+        bits = []
+        for v in split:
+            role = "计入" if v.get("role") == "counted" else "旁证"
+            bits.append(f"{v.get('label_zh')} {float(v.get('ai_prob') or 0):.2f}（{role}）")
+        parts.append("分票：" + " · ".join(bits))
+    # Always surface process-evidence reverse hint when we have multi-path info
+    if hint.get("zh") and (len(split) >= 2 or disagree > 0.3):
+        # Avoid duplicating the short PR#4 line when already appended above
+        if not (disagree > 0.3 and "分歧是信号：请提高过程证据的权重" in "\n\n".join(parts)):
+            parts.append(hint["zh"])
+        elif hint.get("level") == "disagreement" and hint.get("observer_spread", 0) > disagree:
+            parts.append(hint["zh"])  # observer-only disagreement still needs full hint
+        elif hint.get("level") == "agreement_not_verdict":
+            parts.append(hint["zh"])
+
+    if not parts:
         return ""
-    if disagree < 0 or (disagree == 0.0 and not voted):
-        return ""
-    line = f"\n\n投票分歧 {disagree:.2f}"
-    if disagree > VOTER_DISAGREE_NOTE:
-        line += (
-            "（启发式 / ONNX / DNA 意见不一致）。"
-            "分歧是信号：请提高过程证据的权重，混合分不是作者判决。"
-        )
-    else:
-        line += "。"
-    return line
+    return "\n\n" + "\n\n".join(parts)
 
 
 def build_score_md(result) -> str:
@@ -233,7 +256,7 @@ def build_score_md(result) -> str:
     conf_line = f"\n\n**置信度 {conf:.2f}**"
     if getattr(result, "insufficient_evidence", False):
         conf_line += " ⚠️ **证据不足**（文本过短或特征结论分散，分数仅作参考）"
-    conf_line += voter_disagreement_md(result.meta or {})
+    conf_line += voter_disagreement_md(result.meta or {}, getattr(result, 'ai_probability', None))
     if calib.get("provisional"):
         conf_line += (
             f"\n\n⚠️ 校准 `{calib.get('lang')}` 侧样本不足"

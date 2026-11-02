@@ -1252,6 +1252,45 @@ def build_annotations(
     return out
 
 
+# Reverse of skipped_already_human_zh. Default blend 0.18 leaves a
+# hand-typed literary note (heuristic ~0.92, aigc-zh ~0.016) at ~0.76,
+# which is still 疑似 AI with a red sentence. Pull that pair to about
+# ai 0.27 (human score ~73, 较符合人类写作) without letting the ONNX
+# vote replace the heuristic entirely.
+ONNX_ZH_RESCUE_HEUR_HUMAN_MAX = 40
+ONNX_ZH_RESCUE_ONNX_AI_MAX = 0.20
+ONNX_ZH_RESCUE_TARGET_AI = 0.27
+ONNX_ZH_RESCUE_BLEND_CAP = 0.85
+
+
+def zh_onnx_rescue_blend(
+    cjk: float,
+    heuristic_human: int,
+    heuristic_ai: float,
+    onnx_ai: float,
+    base_blend: float,
+) -> Optional[float]:
+    """Raised ONNX weight when Chinese ONNX strongly disagrees toward human.
+
+    Returns None to keep ``base_blend``. The returned weight may exceed the
+    ordinary 0.45 blend cap; only this gate does that.
+    """
+    if cjk < 0.35 or base_blend <= 1e-9:
+        return None
+    if int(heuristic_human) > ONNX_ZH_RESCUE_HEUR_HUMAN_MAX:
+        return None
+    if float(onnx_ai) > ONNX_ZH_RESCUE_ONNX_AI_MAX:
+        return None
+    gap = float(heuristic_ai) - float(onnx_ai)
+    if gap <= 0.05:
+        return None
+    need = (float(heuristic_ai) - ONNX_ZH_RESCUE_TARGET_AI) / gap
+    need = max(float(base_blend), min(ONNX_ZH_RESCUE_BLEND_CAP, need))
+    if need <= float(base_blend) + 1e-6:
+        return None
+    return need
+
+
 def analyze(
     text: str,
     weights: Optional[Dict[str, float]] = None,
@@ -1555,19 +1594,36 @@ def analyze(
                 }
                 if scored.get("ok"):
                     b = max(0.0, min(0.45, float(onnx_blend if onnx_blend is not None else _ONNX_B)))
+                    onnx_ai = float(scored["ai_prob"])
+                    rescued = False
                     # Protect classics / already-human heuristic (Gettysburg-style FP)
-                    if heur_h >= 68 and float(scored["ai_prob"]) >= 0.55:
+                    if heur_h >= 68 and onnx_ai >= 0.55:
                         b = 0.0
                         onnx_meta["status"] = "skipped_already_human"
                     # Protect concrete ZH alley/lit when heuristic already human-high
-                    if cjk >= 0.35 and heur_h >= 62 and float(scored["ai_prob"]) >= 0.60:
+                    elif cjk >= 0.35 and heur_h >= 62 and onnx_ai >= 0.60:
                         b = 0.0
                         onnx_meta["status"] = "skipped_already_human_zh"
+                    else:
+                        raised = zh_onnx_rescue_blend(
+                            cjk, heur_h, ai_probability, onnx_ai, b,
+                        )
+                        if raised is not None:
+                            b = raised
+                            rescued = True
                     pre = ai_probability
                     if b > 1e-9:
-                        ai_probability = blend_ai_probability(pre, float(scored["ai_prob"]), b)
+                        if b <= 0.45:
+                            ai_probability = blend_ai_probability(pre, onnx_ai, b)
+                        else:
+                            # Rescue weight is above blend_ai_probability's cap.
+                            h = max(0.0, min(1.0, pre))
+                            o = max(0.0, min(1.0, onnx_ai))
+                            ai_probability = (1.0 - b) * h + b * o
                         onnx_meta["used"] = True
-                        onnx_meta["status"] = "blended"
+                        onnx_meta["status"] = (
+                            "blended_onnx_rescues_zh" if rescued else "blended"
+                        )
                     else:
                         onnx_meta["used"] = False
                     onnx_meta["blend_applied"] = b
@@ -1722,6 +1778,16 @@ def analyze(
                     s.heat = "none"
         for i, s in enumerate(sent_results):
             s.percentile = round(percentile[i], 4)
+        # A rescued document is Likely Human. The within-doc percentile term
+        # still pushes the sharpest sentence over the red line (0.65) even
+        # when its neighbours are quiet. Keep that sentence visible, but
+        # yellow: red heat would contradict the rescued document band.
+        if onnx_meta.get("status") == "blended_onnx_rescues_zh":
+            cap = HEAT_RED - 0.01
+            for s in sent_results:
+                if s.ai_probability >= HEAT_RED:
+                    s.ai_probability = cap
+                    s.heat = heat_label(s.ai_probability)
 
     # Highlight policy (TipType UX convention: only the top severity band)
     has_red = any(s.heat == "red" for s in sent_results)

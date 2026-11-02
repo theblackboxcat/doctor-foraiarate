@@ -347,7 +347,12 @@ def main() -> None:
             r_zh.meta["onnx"].get("path") == "zh"
             or "cjk" in zh_st
             or zh_st.startswith("zh_unavailable")
-            or zh_st in ("skipped_already_human_zh", "blended", "skipped_already_human")
+            or zh_st in (
+                "skipped_already_human_zh",
+                "blended",
+                "blended_onnx_rescues_zh",
+                "skipped_already_human",
+            )
             or r_zh.meta["onnx"].get("used") is False,
             f"ZH ONNX path should be zh/soft-fail, got {r_zh.meta['onnx']}",
         )
@@ -554,6 +559,158 @@ def main() -> None:
         and rendered.ai_probability == untouched.ai_probability
         and rendered.confidence == untouched.confidence,
         "surfacing disagreement does not rescore",
+    )
+
+
+    # --- aidetector reverse: voter split / process-evidence hint ---
+    from honesty_signals import attach_honesty_fields, build_voter_split, observer_spread
+    # synthetic meta: heuristic low, onnx observer high, not blended
+    fake = {
+        "ai_probability": 0.05,
+        "meta": {
+            "voter_disagreement": 0.0,
+            "onnx": {
+                "used": False,
+                "status": "skipped_already_human_zh",
+                "ai_prob_before": 0.05,
+                "ai_prob_onnx": 0.94,
+                "score": {"ok": True, "ai_prob": 0.94},
+            },
+            "ollama": {"used": False, "status": "skipped"},
+        },
+    }
+    attach_honesty_fields(fake)
+    assert fake["voter_split"], "voter_split empty"
+    assert any(v.get("role") == "observer" for v in fake["voter_split"]), "observer onnx missing"
+    assert fake["process_evidence_hint"]["effective_spread"] >= 0.3, fake["process_evidence_hint"]
+    assert fake["process_evidence_hint"]["level"] == "disagreement", fake["process_evidence_hint"]
+    print("  honesty_signals observer-split OK", fake["process_evidence_hint"]["effective_spread"])
+
+    # --- ZH ONNX rescue: heuristic AI-high, aigc-zh strongly human ---
+    # No weights required: stub the ZH/EN scorers. The hand-typed note is the
+    # 2026-11-02 false red (heuristic ~0.92, ONNX ~0.016).
+    from backends.onnx_classifier import OnnxStatus
+    import backends.onnx_classifier as oxmod
+    from detector import zh_onnx_rescue_blend
+
+    hand_fp = (
+        "这一版改的出了问题。这首诗中的两条注释有欺骗性。它似乎把我们引向简单的工具性同人分析，实则不然。\n"
+        "在早期，你曾经和我提到过大量有关双相，躯体化相关的心理层面问题，甚至后来你与化形对应的那个化身理论，我认为源头都来自于这首诗所写的《女心理师》中叶家辉母亲傅棠。而且这首诗也并不是代入叶家辉的视角，而是从他这个切口落笔，你在心里代入的实际上是傅棠。不过从这首诗看，其实情况更加复杂。因为还要算上你后面（夭折的）妈妈的诗。我感觉你是把一个未来的成熟而富有魅力但又带有这样特质的你自己代入了傅棠。"
+    )
+    hand_off = analyze(hand_fp, use_onnx=False)
+    assert_true(
+        hand_off.human_score < 40,
+        f"hand note without ONNX should stay AI-high, got {hand_off.human_score}",
+    )
+    raised = zh_onnx_rescue_blend(
+        0.9,
+        hand_off.human_score,
+        hand_off.ai_probability,
+        0.0156,
+        0.18,
+    )
+    assert_true(raised is not None and raised > 0.45, f"rescue blend should exceed 0.45, got {raised}")
+    assert_true(
+        zh_onnx_rescue_blend(0.1, 8, 0.92, 0.02, 0.18) is None,
+        "english text must not take the ZH rescue",
+    )
+    assert_true(
+        zh_onnx_rescue_blend(0.9, 8, 0.92, 0.80, 0.18) is None,
+        "ONNX-agreeing-AI must not rescue",
+    )
+    assert_true(
+        zh_onnx_rescue_blend(0.9, 90, 0.08, 0.02, 0.18) is None,
+        "already-human heuristic must not rescue",
+    )
+
+    def _stub_status(label: str) -> OnnxStatus:
+        return OnnxStatus(
+            available=True,
+            model_dir="stub",
+            reason="ready",
+            providers=["CPUExecutionProvider"],
+            label=label,
+        )
+
+    def _score_of(p: float):
+        return {
+            "ok": True,
+            "ai_prob": p,
+            "human_prob": 1.0 - p,
+            "model": "stub",
+            "logits": [0.0, 0.0],
+        }
+
+    saved_onnx = (oxmod.probe_zh, oxmod.score_text_zh, oxmod.probe, oxmod.score_text)
+    try:
+        oxmod.probe_zh = lambda model_dir=None: _stub_status("aigc-zh")
+        oxmod.probe = lambda model_dir=None: _stub_status("ettin-68m")
+
+        def score_zh(text, model_dir=None, apply_calibration=False):
+            if "高质量发展" in text or "人工智能已经深刻" in text:
+                return _score_of(0.91)
+            if "女心理师" in text:
+                return _score_of(0.0156)
+            return _score_of(0.50)
+
+        oxmod.score_text_zh = score_zh
+        oxmod.score_text = lambda text, model_dir=None, apply_calibration=True: _score_of(0.02)
+
+        hand = analyze(hand_fp)
+        off_on = analyze(ZH_OFFICIAL_AI)
+        essay_on = analyze(ZH_ESSAY_AI)
+        slop_on = analyze(AI_SLOP)
+    finally:
+        oxmod.probe_zh, oxmod.score_text_zh, oxmod.probe, oxmod.score_text = saved_onnx
+
+    hmeta = hand.meta["onnx"]
+    assert_true(hmeta.get("status") == "blended_onnx_rescues_zh", f"rescue status, got {hmeta}")
+    assert_true(hmeta.get("used") is True, "rescue counts the ONNX vote")
+    assert_true(abs(float(hmeta.get("ai_prob_onnx")) - 0.0156) < 1e-6, hmeta)
+    assert_true(
+        60 <= hand.human_score < 80,
+        f"hand note should land Likely Human, got {hand.human_score} {hand.human_band_zh}",
+    )
+    assert_true(hand.human_band_zh == "较符合人类写作", hand.human_band_zh)
+    hand_heats = [s.heat for s in hand.sentences]
+    assert_true("red" not in hand_heats, f"rescue must not paint red, got {hand_heats}")
+    assert_true("yellow" in hand_heats, f"outlier sentence should stay yellow, got {hand_heats}")
+    assert_true(
+        float(hand.meta.get("voter_disagreement") or 0) > 0.5,
+        f"disagreement should stay visible, got {hand.meta.get('voter_disagreement')}",
+    )
+    hand_api = attach_honesty_fields(hand.to_dict())
+    roles = {v.get("id"): v.get("role") for v in hand_api["voter_split"]}
+    assert_true(roles.get("onnx") == "counted", f"rescued ONNX should be a counted vote, got {roles}")
+    assert_true(
+        hand_api["process_evidence_hint"]["effective_spread"] > 0.3,
+        hand_api["process_evidence_hint"],
+    )
+
+    for name, doc in (("official", off_on), ("essay", essay_on)):
+        assert_true(
+            doc.human_score <= 40 and doc.human_band_zh in ("高度疑似 AI", "疑似 AI"),
+            f"ZH {name} should stay AI, got {doc.human_score} {doc.human_band_zh}",
+        )
+        assert_true(
+            doc.meta["onnx"].get("status") == "blended",
+            f"ZH {name} should use the normal blend, got {doc.meta['onnx']}",
+        )
+    assert_true(
+        slop_on.human_score < 40 and slop_on.human_band_zh in ("高度疑似 AI", "疑似 AI"),
+        f"AI_SLOP should stay AI under a human-like EN ONNX, got {slop_on.human_score} {slop_on.human_band_zh}",
+    )
+    assert_true(
+        slop_on.meta["onnx"].get("status") != "blended_onnx_rescues_zh",
+        f"EN path must not use the ZH rescue, got {slop_on.meta['onnx']}",
+    )
+    print(
+        "  zh onnx rescue OK",
+        f"hand={hand.human_score}/{hand.human_band_zh}",
+        f"heats={hand_heats}",
+        f"spread={hand.meta.get('voter_disagreement')}",
+        f"official={off_on.human_score}",
+        f"slop={slop_on.human_score}",
     )
 
     print("SMOKE OK")

@@ -147,8 +147,14 @@
     if (cm.provisional) notes.push(`校准样本不足（human=${cm.n_human} / ai=${cm.n_ai}），中文/该语言锚点为临时先验，置信度已下调。`);
     if (cm.temperature && Math.abs(cm.temperature - 1) > 0.02) notes.push(`温度缩放 T=${Number(cm.temperature).toFixed(2)}（T>1 冷却过自信）。`);
     if (!cm.calibrated) notes.push("没有 calibration.json，正在使用 v2.4 回退曲线。");
-    if ((d.meta.voter_disagreement || 0) > 0.3) notes.push(`投票分歧 ${fmt(d.meta.voter_disagreement, 2)}（启发式 / ONNX / DNA 意见不一致）。`);
-    $("confNote").textContent = notes.join(" ") || "各特征结论一致。";
+    const hint = d.process_evidence_hint || {};
+    if ((d.meta.voter_disagreement || 0) > 0.3) notes.push(`计入终分的投票分歧 ${fmt(d.meta.voter_disagreement, 2)}。`);
+    if (hint.effective_spread > 0.3 && (hint.observer_spread || 0) > (d.meta.voter_disagreement || 0)) {
+      notes.push(`含旁证票的分票极差 ${fmt(hint.effective_spread, 2)}（有票未混入终分）。`);
+    }
+    if (hint.zh) notes.push(hint.zh);
+    $("confNote").textContent = notes.join(" ") || "各特征结论接近；接近也不是作者判决。";
+    renderVoterSplit(d);
 
     const flags = [];
     if (d.meta.mixed_writing_hint) flags.push('<span class="badge warn">疑似人机混写（段落间差异大）</span>');
@@ -169,6 +175,35 @@
     renderAnnotations(d);
     $("jsonOut").textContent = JSON.stringify(d, null, 2);
     $("policyTag").textContent = `policy: ${d.highlight_policy}`;
+  }
+
+
+  function renderVoterSplit(d) {
+    let box = $("voterSplit");
+    if (!box) {
+      const host = $("flags") && $("flags").parentElement;
+      if (!host) return;
+      box = document.createElement("div");
+      box.id = "voterSplit";
+      box.className = "voter-split";
+      host.insertBefore(box, $("flags").nextSibling);
+    }
+    const votes = d.voter_split || [];
+    if (!votes.length) {
+      box.innerHTML = '<p class="muted">暂无分票（单路或后端未给出概率）。</p>';
+      return;
+    }
+    const rows = votes.map((v) => {
+      const role = v.role === "counted" ? "计入终分" : "旁证";
+      const cls = v.role === "counted" ? "badge ok" : "badge soft";
+      return `<tr><td>${esc(v.label_zh || v.id)}</td><td><code>${fmt(v.ai_prob, 3)}</code></td>` +
+        `<td><span class="${cls}">${role}</span></td><td class="muted">${esc(v.note_zh || "")}</td></tr>`;
+    }).join("");
+    const hint = d.process_evidence_hint || {};
+    const head = `<div class="voter-split-head"><b>分票（反向共识）</b>` +
+      `<span class="muted"> 极差 ${fmt(hint.effective_spread, 2)} · 多检一致≠作者判决</span></div>`;
+    box.innerHTML = head +
+      `<table class="feat"><thead><tr><th>路</th><th>AI≈</th><th>角色</th><th>说明</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function renderHighlight(d) {
