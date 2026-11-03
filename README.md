@@ -2,7 +2,7 @@
 
 v3.2，引擎 `local_heuristic_v3.2`。离线的中文/英文 AI 写作信号检测工具：给的是改稿线索，不是作者证明。不调用远端 API，不上传文字，不需要账号。
 
-完整说明见 [README_ZH.md](README_ZH.md)（含 §9 竞品特征对照、§9.1 反向借鉴：共识判决 vs 分歧信号、§10 诚实边界；边界语气对齐 [Jisc 2026-10-15 AI detection update](https://nationalcentreforai.jiscinvolve.org/wp/2026/10/15/ai-detection-and-assessment-an-update-for-2026/)）。装法、自检和边界见 [发行说明.md](发行说明.md)。
+完整说明见 [README_ZH.md](README_ZH.md)（含 §9 竞品特征对照、§9.1 反向借鉴：共识判决 vs 分歧信号、§10 诚实边界、§10.4 政策条件与过程证据；边界语气对齐 [Jisc 2026-10-15 AI detection update](https://nationalcentreforai.jiscinvolve.org/wp/2026/10/15/ai-detection-and-assessment-an-update-for-2026/)）。装法、自检和边界见 [发行说明.md](发行说明.md)。
 
 ## 反向借鉴（短）
 
@@ -11,6 +11,10 @@ v3.2，引擎 `local_heuristic_v3.2`。离线的中文/英文 AI 写作信号检
 ## The same boundary in English
 
 Multiple votes are information about agreement or disagreement. They are not an authorship verdict. The public “four detectors ≈ 0% false positives” table on [aidetector.com](https://aidetector.com/) is that site’s marketing. The underlying study is Hyatt et al.’s undergraduate anatomy-and-physiology fact essays, and it is not an accuracy promise for this detector on Chinese literary text. When the heuristic, ONNX, and DNA votes disagree, read `meta.voter_disagreement` (it lowers `confidence`) and prefer process evidence. Full write-up: [README_ZH.md §9.1](README_ZH.md).
+
+## Policy compliance and process evidence
+
+When a rule is in force, the detection target is policy compliance for a role and a task ([Policy-Conditioned AI-Use Detection](https://arxiv.org/abs/2609.38427)): a report states hypothesis, evidence, and uncertainty in place of an “AI detected” verdict. A [Humanly](https://arxiv.org/abs/2607.21758) certificate is in-platform process evidence (activity log, replay, typing) and cannot prove intent or rule out off-platform channels. [AGENT-XTrust](https://aclanthology.org/2026.findings-emnlp.1539/) names the classification–evidence gap: a scalar score is a weak deployment interface. Scores here remain a shared style signal, not an authorship verdict. Full note: [README_ZH.md §10.4](README_ZH.md).
 
 ## 安装与运行（Windows / Python 3.10+）
 
