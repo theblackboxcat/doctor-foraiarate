@@ -382,9 +382,40 @@ def api_analyze(req: AnalyzeRequest):
     return JSONResponse(content=data)
 
 
+def _compare_side(result: Any) -> Dict[str, Any]:
+    """One revision's scores, plus process-evidence fields.
+
+    ``voter_split`` and ``process_evidence_hint`` are 改稿线索. They are not
+    authorship verdicts. Attaching them does not rescore.
+    """
+    meta = result.meta if isinstance(getattr(result, "meta", None), dict) else {}
+    onnx = meta.get("onnx") if isinstance(meta.get("onnx"), dict) else {}
+    ollama = meta.get("ollama") if isinstance(meta.get("ollama"), dict) else {}
+    side: Dict[str, Any] = {
+        "human_score": result.human_score,
+        "ai_probability": round(result.ai_probability, 4),
+        "confidence": round(result.confidence, 4),
+        "chars": result.char_count,
+        # Slice the voter records the hint reads. Full paragraphs stay off this
+        # endpoint; scores above are the same numbers analyze() already returned.
+        "meta": {
+            "voter_disagreement": meta.get("voter_disagreement"),
+            "onnx": onnx,
+            "ollama": ollama,
+        },
+    }
+    return attach_honesty_fields(side)
+
+
 @app.post("/api/compare")
 def api_compare(req: CompareRequest):
-    """Before/after revision comparison — did the AI flavour drop?"""
+    """Before/after revision comparison — did the AI flavour drop?
+
+    ``before`` and ``after`` each include ``voter_split`` and
+    ``process_evidence_hint`` (``level`` / ``zh``). Those fields point at
+    process evidence (改稿线索). They are not authorship verdicts and do not
+    change scores, weights, or calibration.
+    """
     w = _norm_weights(req.weights)
     a = analyze(req.before or "", weights=w, use_onnx=bool(req.use_onnx))
     b = analyze(req.after or "", weights=w, use_onnx=bool(req.use_onnx))
@@ -399,18 +430,8 @@ def api_compare(req: CompareRequest):
                            "delta": round(cb - ca, 4)})
     deltas.sort(key=lambda d: d["delta"])
     return {
-        "before": {
-            "human_score": a.human_score,
-            "ai_probability": round(a.ai_probability, 4),
-            "confidence": round(a.confidence, 4),
-            "chars": a.char_count,
-        },
-        "after": {
-            "human_score": b.human_score,
-            "ai_probability": round(b.ai_probability, 4),
-            "confidence": round(b.confidence, 4),
-            "chars": b.char_count,
-        },
+        "before": _compare_side(a),
+        "after": _compare_side(b),
         "delta_human_score": b.human_score - a.human_score,
         "feature_deltas": deltas[:10],
     }

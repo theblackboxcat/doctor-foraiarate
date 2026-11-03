@@ -584,7 +584,101 @@ def main() -> None:
     assert any(v.get("role") == "observer" for v in fake["voter_split"]), "observer onnx missing"
     assert fake["process_evidence_hint"]["effective_spread"] >= 0.3, fake["process_evidence_hint"]
     assert fake["process_evidence_hint"]["level"] == "disagreement", fake["process_evidence_hint"]
+    assert "过程证据" in fake["process_evidence_hint"]["zh"], fake["process_evidence_hint"]["zh"]
+    assert "不是作者标签" in fake["process_evidence_hint"]["zh"], fake["process_evidence_hint"]["zh"]
+    assert "作者是AI" not in fake["process_evidence_hint"]["zh"], fake["process_evidence_hint"]["zh"]
     print("  honesty_signals observer-split OK", fake["process_evidence_hint"]["effective_spread"])
+
+    # Regression: AnalyzeResult.to_dict() → attach_honesty_fields.
+    # The 0.42 counted spread is the same display fixture the Gradio note uses.
+    # It is not a new threshold. Scores on the dump must stay put.
+    doc = analyze(GETTYSBURG, backend="heuristic", use_onnx=False)
+    payload = json.loads(json.dumps(doc.to_dict(), ensure_ascii=False))
+    frozen_scores = (payload["human_score"], payload["ai_probability"], payload["confidence"])
+    payload["meta"]["voter_disagreement"] = 0.42
+    heur_p = payload["ai_probability"]
+    payload["meta"]["onnx"] = {
+        "used": True,
+        "status": "blended",
+        "ai_prob_before": heur_p,
+        "ai_prob_onnx": heur_p,
+        "score": {"ok": True, "ai_prob": heur_p},
+    }
+    attached = attach_honesty_fields(payload)
+    assert_true(isinstance(attached.get("voter_split"), list) and len(attached["voter_split"]) >= 2,
+                f"AnalyzeResult voter_split missing, got {attached.get('voter_split')}")
+    ids = {v.get("id") for v in attached["voter_split"]}
+    assert_true("heuristic" in ids and "onnx" in ids, f"expected heuristic+onnx split, got {ids}")
+    ph = attached["process_evidence_hint"]
+    assert_true(ph.get("level") == "disagreement", ph)
+    assert_true(isinstance(ph.get("zh"), str) and "过程证据" in ph["zh"], ph.get("zh"))
+    assert_true("不是作者标签" in ph["zh"] and "作者是AI" not in ph["zh"], ph.get("zh"))
+    assert_true(ph.get("effective_spread", 0) > 0.3, ph)
+    assert_true(
+        (attached["human_score"], attached["ai_probability"], attached["confidence"]) == frozen_scores,
+        "honesty fields must not rescore an AnalyzeResult dump",
+    )
+    print("  AnalyzeResult honesty fields OK", ph["level"])
+
+    # /api/compare must expose the same fields on both revisions, without rescoring.
+    from server import CompareRequest, api_compare
+
+    cmp = api_compare(CompareRequest(before=AI_SLOP, after=GETTYSBURG, use_onnx=False))
+    assert_true(cmp["delta_human_score"] == cmp["after"]["human_score"] - cmp["before"]["human_score"],
+                "compare delta stays a score difference")
+    assert_true(isinstance(cmp.get("feature_deltas"), list), "feature_deltas still returned")
+    for side_name, side in (("before", cmp["before"]), ("after", cmp["after"])):
+        hint = side.get("process_evidence_hint") or {}
+        split = side.get("voter_split")
+        assert_true(isinstance(split, list) and split, f"compare {side_name} voter_split missing")
+        assert_true(isinstance(hint.get("level"), str) and hint["level"], f"compare {side_name} level missing")
+        assert_true(isinstance(hint.get("zh"), str) and "过程证据" in hint["zh"], hint.get("zh"))
+        assert_true("作者是AI" not in hint["zh"], hint.get("zh"))
+        assert_true("voter_disagreement" in (side.get("meta") or {}), f"compare {side_name} meta slice")
+    off_before = analyze(AI_SLOP, backend="heuristic", use_onnx=False)
+    off_after = analyze(GETTYSBURG, backend="heuristic", use_onnx=False)
+    assert_true(cmp["before"]["human_score"] == off_before.human_score, "compare before score drifted")
+    assert_true(cmp["after"]["human_score"] == off_after.human_score, "compare after score drifted")
+    assert_true(
+        abs(cmp["before"]["ai_probability"] - round(off_before.ai_probability, 4)) < 1e-9,
+        "compare before ai_probability drifted",
+    )
+    assert_true(
+        abs(cmp["after"]["confidence"] - round(off_after.confidence, 4)) < 1e-9,
+        "compare after confidence drifted",
+    )
+    assert_true(
+        cmp["before"]["meta"]["voter_disagreement"] == off_before.meta.get("voter_disagreement"),
+        "compare must not rewrite voter_disagreement",
+    )
+    print("  /api/compare honesty fields OK",
+          cmp["before"]["process_evidence_hint"]["level"],
+          "→",
+          cmp["after"]["process_evidence_hint"]["level"])
+
+    # Same 0.42 display fixture, through the compare side builder.
+    from server import _compare_side
+
+    loud = analyze(GETTYSBURG, backend="heuristic", use_onnx=False)
+    loud_scores = (loud.human_score, round(loud.ai_probability, 4), round(loud.confidence, 4))
+    loud.meta["voter_disagreement"] = 0.42
+    loud.meta["onnx"] = {
+        "used": True,
+        "status": "blended",
+        "ai_prob_before": loud.ai_probability,
+        "ai_prob_onnx": loud.ai_probability,
+        "score": {"ok": True, "ai_prob": loud.ai_probability},
+    }
+    side = _compare_side(loud)
+    assert_true(side["process_evidence_hint"]["level"] == "disagreement", side["process_evidence_hint"])
+    assert_true("过程证据" in side["process_evidence_hint"]["zh"], side["process_evidence_hint"]["zh"])
+    assert_true("作者是AI" not in side["process_evidence_hint"]["zh"], side["process_evidence_hint"]["zh"])
+    assert_true(len(side["voter_split"]) >= 2, side["voter_split"])
+    assert_true(
+        (side["human_score"], side["ai_probability"], side["confidence"]) == loud_scores,
+        "compare side must not rescore when the hint fires",
+    )
+    print("  compare side disagreement hint OK", side["process_evidence_hint"]["effective_spread"])
 
     # --- ZH ONNX rescue: heuristic AI-high, aigc-zh strongly human ---
     # No weights required: stub the ZH/EN scorers. The hand-typed note is the

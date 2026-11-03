@@ -485,7 +485,7 @@ python test_smoke.py  →  SMOKE OK
 
 - `meta.voter_disagreement` 是已投票后端的极差，`max(votes) − min(votes)`。票始终含启发式后验；只有 `meta.onnx.used` 时才加入 ONNX 的 `ai_prob`；只有 `meta.ollama.used` 时才加入 DNA 的 `ai_like`（写在信号名 `ollama_dna_overlap` 上）。不足两票时该值为 0，表示没有第二票，不表示各检测器一致。
 - 这个极差乘进 `confidence`（见 §6），并可能把文档打成 `insufficient_evidence`（`confidence < 0.42` 或短于下限）。它本身不是作者标签。网页在 `meta.voter_disagreement > 0.3` 时提示「启发式 / ONNX / DNA 意见不一致」（`web/app.js`）。
-- 分析响应另返回 `voter_split` 与 `process_evidence_hint`。`voter_split` 列出每一路概率，包括已经算出但没有混进终分的 ONNX/DNA 旁证票；`process_evidence_hint.effective_spread` 取计入极差与旁证极差的较大者，用来提示先看过程证据。网页分票表会标出这些观察票。计分与 `voter_disagreement` 进入 `confidence` 的方式不变。
+- 分析响应另返回 `voter_split` 与 `process_evidence_hint`。`voter_split` 列出每一路概率，包括已经算出但没有混进终分的 ONNX/DNA 旁证票；`process_evidence_hint.effective_spread` 取计入极差与旁证极差的较大者，用来提示先看过程证据。网页分票表会标出这些观察票。计分与 `voter_disagreement` 进入 `confidence` 的方式不变。`/api/compare` 的 `before` 与 `after` 同样带这两个字段（含 `level` / `zh`）：它们是过程证据旁注，不是作者判决，也不改分数。
 - 后端打开时，ONNX / DNA 仍可能被混合进 `ai_probability`。混合后的 Human Score 仍是改稿线索。分歧变大时去看过程证据，不要把混合结果当成作者标签。
 - 句级和文档级各看各的作用域。`sentences[].heat` 取 `red` / `yellow` / `none`；`annotations[]` 里 `kind` 为 `sentence` 或 `paragraph` 的条目作用域是片段，`kind` 为 `feature` 的条目与 Human Score 同属整篇（§5）。片段与总分不一致时，同样去看过程证据，而不是把两边平均成一个作者结论。每条标注仍带自己的 `p_ai`、`confidence`、`action`（`flag` / `review` / `ignore`）。
 
