@@ -7,6 +7,13 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
+# Display-only. Same 0.3 Gradio (app.py) and web/app.js already use for the
+# "意见不一致" note. Not a scoring threshold; do not retune it here.
+EFFECTIVE_SPREAD_DISAGREE = 0.3
+
+# Pair note treats these hint levels as "look at process evidence first".
+_PROCESS_FIRST_LEVELS = frozenset({"disagreement", "single_voter"})
+
 
 def _f(x: Any) -> Optional[float]:
     try:
@@ -114,7 +121,7 @@ def build_process_evidence_hint(
             "当前只有一路有效票。单检不是判决；高风险场景（成绩/处分/雇佣）请优先看版本历史、"
             "口头核对与作业设计等过程证据，本分数只做改稿线索。"
         )
-    elif effective > 0.3:
+    elif effective > EFFECTIVE_SPREAD_DISAGREE:
         level = "disagreement"
         zh = (
             f"分票极差约 {effective:.2f}（含未混入终分的旁证票时一并计入展示）。"
@@ -123,6 +130,9 @@ def build_process_evidence_hint(
         )
         if has_observer and counted_dis < obs_dis:
             zh += " 注意：有旁证票未混入终分，界面仍应看见分歧。"
+        zh += (
+            "高分歧场景请先看版本历史/口头核对/作业设计等过程证据，再看 Human Score；分数不是作者标签。"
+        )
     else:
         level = "agreement_not_verdict"
         zh = (
@@ -130,13 +140,57 @@ def build_process_evidence_hint(
             "高风险场景仍以过程证据优先，本仓库分数只回答成品表面是否像公共风格签名。"
         )
 
+    if level == "agreement_not_verdict":
+        recommend_process_first = False
+        priority = "style_signal_only"
+    else:
+        # disagreement and single_voter: process evidence before the score.
+        recommend_process_first = True
+        priority = "process_evidence"
+
     return {
         "level": level,
         "zh": zh,
+        "recommend_process_first": recommend_process_first,
+        "priority": priority,
         "counted_disagreement": round(counted_dis, 4),
         "observer_spread": obs_dis,
         "effective_spread": effective,
         "anti_consensus_marketing": True,
+    }
+
+
+def build_process_note(
+    before_hint: Dict[str, Any] | None,
+    after_hint: Dict[str, Any] | None,
+) -> Dict[str, Any]:
+    """One line for a before/after pair. Does not rescore.
+
+    ``any_disagreement`` is true when either side's ``level`` is
+    ``disagreement`` or ``single_voter``. ``recommend_process_first`` is the
+    OR of the two sides' flags. The ``zh`` line says whether this pair should
+    elevate process evidence. It is not an authorship verdict.
+    """
+    before_hint = before_hint if isinstance(before_hint, dict) else {}
+    after_hint = after_hint if isinstance(after_hint, dict) else {}
+    levels = (str(before_hint.get("level") or ""), str(after_hint.get("level") or ""))
+    any_disagreement = any(level in _PROCESS_FIRST_LEVELS for level in levels)
+    recommend = bool(before_hint.get("recommend_process_first")) or bool(
+        after_hint.get("recommend_process_first")
+    )
+    if recommend or any_disagreement:
+        zh = (
+            "前后至少一侧是高分歧或单票：请先看版本历史、口头核对、作业设计等过程证据，"
+            "再看 Human Score；分数不是作者标签。"
+        )
+    else:
+        zh = (
+            "前后分票接近，不必因分歧抬高过程证据；票面接近仍然不是作者证明，分数不是作者标签。"
+        )
+    return {
+        "any_disagreement": any_disagreement,
+        "recommend_process_first": recommend,
+        "zh": zh,
     }
 
 

@@ -44,7 +44,10 @@ from detector import (  # noqa: E402
     reload_calibration,
     save_weights,
 )
-from honesty_signals import attach_honesty_fields  # aidetector reverse: split + process hint
+from honesty_signals import (  # aidetector reverse: split + process hint
+    attach_honesty_fields,
+    build_process_note,
+)
 # 引擎标识只有一个真相来源：detector._ENGINE。
 # 这里原来是字面量 "local_heuristic_v3.1"，于是 v3.2 发版后 /api/meta 仍报 v3.1——
 # 而前端标题、Cowrite 侧的 ai_annotate.available() 各自还有一份自己的版本号。
@@ -412,9 +415,10 @@ def api_compare(req: CompareRequest):
     """Before/after revision comparison — did the AI flavour drop?
 
     ``before`` and ``after`` each include ``voter_split`` and
-    ``process_evidence_hint`` (``level`` / ``zh``). Those fields point at
-    process evidence (改稿线索). They are not authorship verdicts and do not
-    change scores, weights, or calibration.
+    ``process_evidence_hint`` (``level`` / ``zh`` / ``recommend_process_first``
+    / ``priority``). Top-level ``process_note`` summarizes whether this pair
+    should elevate process evidence. Those fields are 改稿线索. They are not
+    authorship verdicts and do not change scores, weights, or calibration.
     """
     w = _norm_weights(req.weights)
     a = analyze(req.before or "", weights=w, use_onnx=bool(req.use_onnx))
@@ -429,11 +433,18 @@ def api_compare(req: CompareRequest):
             deltas.append({"name": name, "before": round(ca, 4), "after": round(cb, 4),
                            "delta": round(cb - ca, 4)})
     deltas.sort(key=lambda d: d["delta"])
+    before = _compare_side(a)
+    after = _compare_side(b)
     return {
-        "before": _compare_side(a),
-        "after": _compare_side(b),
+        "before": before,
+        "after": after,
         "delta_human_score": b.human_score - a.human_score,
         "feature_deltas": deltas[:10],
+        # Pair-level side note only. Scores above are analyze()'s numbers.
+        "process_note": build_process_note(
+            before.get("process_evidence_hint"),
+            after.get("process_evidence_hint"),
+        ),
     }
 
 

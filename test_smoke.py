@@ -104,6 +104,151 @@ def assert_true(cond: bool, msg: str) -> None:
         raise AssertionError(msg)
 
 
+# Disagreement-only tighten sentence. Must stay out of agreement / single-voter copy.
+_TIGHT_ZH = (
+    "高分歧场景请先看版本历史/口头核对/作业设计等过程证据，再看 Human Score；分数不是作者标签。"
+)
+
+
+def test_process_evidence_tightening() -> None:
+    """Hint fields + pair note. Synthetic meta only; no ONNX and no rescore."""
+    from honesty_signals import (
+        EFFECTIVE_SPREAD_DISAGREE,
+        attach_honesty_fields,
+        build_process_evidence_hint,
+        build_process_note,
+    )
+
+    assert_true(EFFECTIVE_SPREAD_DISAGREE == 0.3, "spread threshold stays 0.3")
+
+    high = build_process_evidence_hint(
+        {"voter_disagreement": 0.42},
+        split=[
+            {"id": "heuristic", "role": "counted", "ai_prob": 0.10},
+            {"id": "onnx", "role": "counted", "ai_prob": 0.52},
+        ],
+    )
+    assert_true(high["level"] == "disagreement", high)
+    assert_true(high["recommend_process_first"] is True, high)
+    assert_true(high["priority"] == "process_evidence", high)
+    assert_true(high["effective_spread"] > EFFECTIVE_SPREAD_DISAGREE, high)
+    assert_true(_TIGHT_ZH in high["zh"], high["zh"])
+    assert_true("不是作者标签" in high["zh"] and "作者是AI" not in high["zh"], high["zh"])
+    assert_true("不要把「多检一致」的外部营销" in high["zh"], high["zh"])
+    assert_true("human_score" not in high, "hint must not carry a score")
+
+    # Observer spread can fire disagreement even when the counted range is small.
+    observer = build_process_evidence_hint(
+        {"voter_disagreement": 0.05},
+        split=[
+            {"id": "heuristic", "role": "counted", "ai_prob": 0.05},
+            {"id": "onnx", "role": "observer", "ai_prob": 0.94},
+        ],
+    )
+    assert_true(observer["level"] == "disagreement", observer)
+    assert_true(observer["recommend_process_first"] is True, observer)
+    assert_true(observer["priority"] == "process_evidence", observer)
+    assert_true(_TIGHT_ZH in observer["zh"], observer["zh"])
+    assert_true("旁证票未混入" in observer["zh"], observer["zh"])
+
+    low = build_process_evidence_hint(
+        {"voter_disagreement": 0.05},
+        split=[
+            {"id": "heuristic", "role": "counted", "ai_prob": 0.40},
+            {"id": "onnx", "role": "counted", "ai_prob": 0.44},
+        ],
+    )
+    assert_true(low["level"] == "agreement_not_verdict", low)
+    assert_true(low["recommend_process_first"] is False, low)
+    assert_true(low["priority"] == "style_signal_only", low)
+    assert_true(low["effective_spread"] <= EFFECTIVE_SPREAD_DISAGREE, low)
+    assert_true(_TIGHT_ZH not in low["zh"], low["zh"])
+    assert_true("不是作者证明" in low["zh"] and "作者是AI" not in low["zh"], low["zh"])
+
+    # Existing contract is strict >: 0.3 is still agreement.
+    edge = build_process_evidence_hint(
+        {"voter_disagreement": EFFECTIVE_SPREAD_DISAGREE},
+        split=[
+            {"id": "heuristic", "role": "counted", "ai_prob": 0.20},
+            {"id": "onnx", "role": "counted", "ai_prob": 0.50},
+        ],
+    )
+    assert_true(edge["level"] == "agreement_not_verdict", edge)
+    assert_true(edge["recommend_process_first"] is False, edge)
+    assert_true(edge["priority"] == "style_signal_only", edge)
+
+    just_over = build_process_evidence_hint(
+        {"voter_disagreement": 0.31},
+        split=[
+            {"id": "heuristic", "role": "counted", "ai_prob": 0.20},
+            {"id": "onnx", "role": "counted", "ai_prob": 0.51},
+        ],
+    )
+    assert_true(just_over["level"] == "disagreement", just_over)
+    assert_true(just_over["recommend_process_first"] is True, just_over)
+    assert_true(_TIGHT_ZH in just_over["zh"], just_over["zh"])
+
+    single = build_process_evidence_hint(
+        {"voter_disagreement": 0.0},
+        split=[{"id": "heuristic", "role": "counted", "ai_prob": 0.20}],
+    )
+    assert_true(single["level"] == "single_voter", single)
+    assert_true(single["recommend_process_first"] is True, single)
+    assert_true(single["priority"] == "process_evidence", single)
+    assert_true(_TIGHT_ZH not in single["zh"], single["zh"])
+    assert_true("单检不是判决" in single["zh"], single["zh"])
+
+    # attach_honesty_fields is what /api/analyze already calls.
+    attached_single = attach_honesty_fields(
+        {"ai_probability": 0.2, "human_score": 80, "meta": {"voter_disagreement": 0.0}}
+    )
+    sh = attached_single["process_evidence_hint"]
+    assert_true(sh["level"] == "single_voter", sh)
+    assert_true(sh["recommend_process_first"] is True, sh)
+    assert_true(sh["priority"] == "process_evidence", sh)
+    assert_true(attached_single["human_score"] == 80, "attach must not rescore")
+
+    attached_agree = attach_honesty_fields(
+        {
+            "ai_probability": 0.42,
+            "human_score": 58,
+            "meta": {
+                "voter_disagreement": 0.02,
+                "onnx": {
+                    "used": True,
+                    "status": "blended",
+                    "ai_prob_before": 0.40,
+                    "ai_prob_onnx": 0.42,
+                    "score": {"ok": True, "ai_prob": 0.42},
+                },
+            },
+        }
+    )
+    ah = attached_agree["process_evidence_hint"]
+    assert_true(ah["level"] == "agreement_not_verdict", ah)
+    assert_true(ah["recommend_process_first"] is False, ah)
+    assert_true(ah["priority"] == "style_signal_only", ah)
+    assert_true(attached_agree["human_score"] == 58, "attach must not rescore")
+
+    loud_note = build_process_note(high, low)
+    assert_true(loud_note["any_disagreement"] is True, loud_note)
+    assert_true(loud_note["recommend_process_first"] is True, loud_note)
+    assert_true("过程证据" in loud_note["zh"] and "作者是AI" not in loud_note["zh"], loud_note["zh"])
+    assert_true("请先看" in loud_note["zh"], loud_note["zh"])
+
+    single_note = build_process_note(single, low)
+    assert_true(single_note["any_disagreement"] is True, single_note)
+    assert_true(single_note["recommend_process_first"] is True, single_note)
+
+    quiet_note = build_process_note(low, edge)
+    assert_true(quiet_note["any_disagreement"] is False, quiet_note)
+    assert_true(quiet_note["recommend_process_first"] is False, quiet_note)
+    assert_true("不必因分歧抬高过程证据" in quiet_note["zh"], quiet_note["zh"])
+    assert_true("作者是AI" not in quiet_note["zh"], quiet_note["zh"])
+    assert_true(set(quiet_note) == {"any_disagreement", "recommend_process_first", "zh"}, quiet_note)
+    print("  process-evidence tightening OK", high["level"], quiet_note["recommend_process_first"])
+
+
 def main() -> None:
     # 1) too short warning (EN floor)
     short = analyze("Hello world.")
@@ -563,6 +708,7 @@ def main() -> None:
 
 
     # --- aidetector reverse: voter split / process-evidence hint ---
+    test_process_evidence_tightening()
     from honesty_signals import attach_honesty_fields, build_voter_split, observer_spread
     # synthetic meta: heuristic low, onnx observer high, not blended
     fake = {
@@ -584,8 +730,11 @@ def main() -> None:
     assert any(v.get("role") == "observer" for v in fake["voter_split"]), "observer onnx missing"
     assert fake["process_evidence_hint"]["effective_spread"] >= 0.3, fake["process_evidence_hint"]
     assert fake["process_evidence_hint"]["level"] == "disagreement", fake["process_evidence_hint"]
+    assert fake["process_evidence_hint"]["recommend_process_first"] is True, fake["process_evidence_hint"]
+    assert fake["process_evidence_hint"]["priority"] == "process_evidence", fake["process_evidence_hint"]
     assert "过程证据" in fake["process_evidence_hint"]["zh"], fake["process_evidence_hint"]["zh"]
     assert "不是作者标签" in fake["process_evidence_hint"]["zh"], fake["process_evidence_hint"]["zh"]
+    assert _TIGHT_ZH in fake["process_evidence_hint"]["zh"], fake["process_evidence_hint"]["zh"]
     assert "作者是AI" not in fake["process_evidence_hint"]["zh"], fake["process_evidence_hint"]["zh"]
     print("  honesty_signals observer-split OK", fake["process_evidence_hint"]["effective_spread"])
 
@@ -611,7 +760,10 @@ def main() -> None:
     assert_true("heuristic" in ids and "onnx" in ids, f"expected heuristic+onnx split, got {ids}")
     ph = attached["process_evidence_hint"]
     assert_true(ph.get("level") == "disagreement", ph)
+    assert_true(ph.get("recommend_process_first") is True, ph)
+    assert_true(ph.get("priority") == "process_evidence", ph)
     assert_true(isinstance(ph.get("zh"), str) and "过程证据" in ph["zh"], ph.get("zh"))
+    assert_true(_TIGHT_ZH in ph["zh"], ph.get("zh"))
     assert_true("不是作者标签" in ph["zh"] and "作者是AI" not in ph["zh"], ph.get("zh"))
     assert_true(ph.get("effective_spread", 0) > 0.3, ph)
     assert_true(
@@ -634,7 +786,34 @@ def main() -> None:
         assert_true(isinstance(hint.get("level"), str) and hint["level"], f"compare {side_name} level missing")
         assert_true(isinstance(hint.get("zh"), str) and "过程证据" in hint["zh"], hint.get("zh"))
         assert_true("作者是AI" not in hint["zh"], hint.get("zh"))
+        assert_true("recommend_process_first" in hint and "priority" in hint,
+                    f"compare {side_name} hint missing tightened fields")
         assert_true("voter_disagreement" in (side.get("meta") or {}), f"compare {side_name} meta slice")
+    note = cmp.get("process_note") or {}
+    assert_true(
+        set(note) >= {"any_disagreement", "recommend_process_first", "zh"},
+        f"compare process_note keys missing: {note!r}",
+    )
+    assert_true(isinstance(note["any_disagreement"], bool), note)
+    assert_true(isinstance(note["recommend_process_first"], bool), note)
+    assert_true(isinstance(note["zh"], str) and "过程证据" in note["zh"], note.get("zh"))
+    assert_true("作者是AI" not in note["zh"], note.get("zh"))
+    side_levels = {
+        cmp["before"]["process_evidence_hint"]["level"],
+        cmp["after"]["process_evidence_hint"]["level"],
+    }
+    assert_true(
+        note["any_disagreement"] == bool(side_levels & {"disagreement", "single_voter"}),
+        f"process_note.any_disagreement drifted from side levels {side_levels}",
+    )
+    assert_true(
+        note["recommend_process_first"] == (
+            bool(cmp["before"]["process_evidence_hint"]["recommend_process_first"])
+            or bool(cmp["after"]["process_evidence_hint"]["recommend_process_first"])
+        ),
+        "process_note.recommend_process_first must be the OR of the two sides",
+    )
+    assert_true("human_score" not in note, "process_note must not carry a score")
     off_before = analyze(AI_SLOP, backend="heuristic", use_onnx=False)
     off_after = analyze(GETTYSBURG, backend="heuristic", use_onnx=False)
     assert_true(cmp["before"]["human_score"] == off_before.human_score, "compare before score drifted")
@@ -671,7 +850,10 @@ def main() -> None:
     }
     side = _compare_side(loud)
     assert_true(side["process_evidence_hint"]["level"] == "disagreement", side["process_evidence_hint"])
+    assert_true(side["process_evidence_hint"]["recommend_process_first"] is True, side["process_evidence_hint"])
+    assert_true(side["process_evidence_hint"]["priority"] == "process_evidence", side["process_evidence_hint"])
     assert_true("过程证据" in side["process_evidence_hint"]["zh"], side["process_evidence_hint"]["zh"])
+    assert_true(_TIGHT_ZH in side["process_evidence_hint"]["zh"], side["process_evidence_hint"]["zh"])
     assert_true("作者是AI" not in side["process_evidence_hint"]["zh"], side["process_evidence_hint"]["zh"])
     assert_true(len(side["voter_split"]) >= 2, side["voter_split"])
     assert_true(
@@ -780,6 +962,10 @@ def main() -> None:
         hand_api["process_evidence_hint"]["effective_spread"] > 0.3,
         hand_api["process_evidence_hint"],
     )
+    assert_true(hand_api["process_evidence_hint"]["level"] == "disagreement", hand_api["process_evidence_hint"])
+    assert_true(hand_api["process_evidence_hint"]["recommend_process_first"] is True, hand_api["process_evidence_hint"])
+    assert_true(hand_api["process_evidence_hint"]["priority"] == "process_evidence", hand_api["process_evidence_hint"])
+    assert_true(_TIGHT_ZH in hand_api["process_evidence_hint"]["zh"], hand_api["process_evidence_hint"]["zh"])
 
     for name, doc in (("official", off_on), ("essay", essay_on)):
         assert_true(
